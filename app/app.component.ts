@@ -35,8 +35,10 @@ function generatePaginationPages(dataArray) {
   return paginationPages;
 }
 
+const NUMBER_OF_INITIAL_PERSONS: number = 100;
+
 const PERSONS: Person[] = [];
-for (let i = 0; i <= 100; i++) {
+for (let i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
   PERSONS.push(generatePerson());
 }
 
@@ -55,17 +57,21 @@ export class OrderByAndSlicePipe implements PipeTransform {
   transform(persons: Person[], value: string, ascending: boolean, page: number) {
     let resultArray;
 
+    function parseValue(value) {
+      return typeof value === 'string' ? value.toLowerCase() : value;
+    }
+
     if (value) {
       if (ascending) {
         resultArray = persons.sort(function(a, b) {
-          if (a[value] < b[value]) return -1;
-          if (a[value] > b[value]) return 1;
+          if (parseValue(a[value]) < parseValue(b[value])) return -1;
+          if (parseValue(a[value]) > parseValue(b[value])) return 1;
           return 0;
         });
       } else {
         resultArray = persons.sort(function(a, b) {
-          if (a[value] > b[value]) return -1;
-          if (a[value] < b[value]) return 1;
+          if (parseValue(a[value]) > parseValue(b[value])) return -1;
+          if (parseValue(a[value]) < parseValue(b[value])) return 1;
           return 0;
         });
       }
@@ -156,7 +162,7 @@ export class OrderByAndSlicePipe implements PipeTransform {
 
         <tbody>
           <tr *ngFor="let person of
-              (persons | orderByAndSlice:orderByValue:orderByAscending:currentPage)"
+              (persons | orderByAndSlice:orderByValue:orderByAscending:currentPage);trackBy:person?.id"
               class="row">
 
             <td class="col-md-5">
@@ -226,7 +232,13 @@ export class AppComponent {
     this.selectedPerson = (person === this.selectedPerson) ? undefined : person;
   };
   addNewPerson() {
-    this.persons.push(this.model);
+    this.model.id = ch.string({length: 10, alpha: true});
+    // http://stackoverflow.com/a/34497504
+    // this.persons.unshift(this.model);
+    // By using the 'natural' order, we get new person to appear on top of the list.
+    this.orderByValue = '';
+    this.gotoPage(1);
+    this.persons = [this.model].concat(this.persons);
     this.model = new Person(null, null, "", null);
   };
   deletePerson() {
