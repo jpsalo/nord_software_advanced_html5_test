@@ -240,9 +240,13 @@ export class AppComponent {
     this.gotoPage(1);
     this.persons = [this.model].concat(this.persons);
     this.model = new Person(null, null, "", null);
+    this.pages = generatePaginationPages(this.persons);
   };
-  deletePerson() {
-    alert('Not yet :)');
+  deletePerson(person) {
+    // TODO:  Add confirm for deletion.
+    this.persons.splice(this.persons.indexOf(person), 1);
+    this.persons = this.persons.concat();
+    this.pages = generatePaginationPages(this.persons);
   }
   model = new Person("", "", "", null);
   ages = AGES;

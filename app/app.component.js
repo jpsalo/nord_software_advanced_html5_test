@@ -119,10 +119,14 @@ var AppComponent = (function () {
         this.gotoPage(1);
         this.persons = [this.model].concat(this.persons);
         this.model = new Person(null, null, "", null);
+        this.pages = generatePaginationPages(this.persons);
     };
     ;
-    AppComponent.prototype.deletePerson = function () {
-        alert('Not yet :)');
+    AppComponent.prototype.deletePerson = function (person) {
+        // TODO:  Add confirm for deletion.
+        this.persons.splice(this.persons.indexOf(person), 1);
+        this.persons = this.persons.concat();
+        this.pages = generatePaginationPages(this.persons);
     };
     AppComponent.prototype.gotoPage = function (pageNumber) {
         this.currentPage = pageNumber;
