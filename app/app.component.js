@@ -9,6 +9,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var chance = require('chance');
+var ch = new chance();
 var Person = (function () {
     function Person(id, name, gender, age) {
         this.id = id;
@@ -19,11 +21,20 @@ var Person = (function () {
     return Person;
 }());
 exports.Person = Person;
-var PERSONS = [
-    new Person(123, 'asd', 'Female', 17),
-    new Person(234, 'bar', 'Male', 57),
-    new Person(345, 'foo', 'Other', 17)
-];
+function generatePerson() {
+    var gender = ch.gender();
+    var person = {
+        id: ch.string({ length: 10, alpha: true }),
+        name: ch.first({ gender: gender }) + ' ' + ch.last(),
+        gender: gender,
+        age: ch.age()
+    };
+    return new Person(person.id, person.name, person.gender, person.age);
+}
+var PERSONS = [];
+for (var i = 0; i <= 100; i++) {
+    PERSONS.push(generatePerson());
+}
 function generateAges() {
     var ages = [];
     for (var i = 1; i <= 120; i++) {

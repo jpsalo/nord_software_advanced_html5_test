@@ -1,19 +1,32 @@
 import { Component } from '@angular/core';
 
+import * as chance from 'chance';
+var ch = new chance();
+
 export class Person {
   constructor(
-    public id: number,
+    public id: string,
     public name: string,
     public gender: string,
     public age: number
   ) { }
 }
 
-const PERSONS: Person[] = [
-  new Person(123, 'asd', 'Female', 17),
-  new Person(234, 'bar', 'Male', 57),
-  new Person(345, 'foo', 'Other', 17)
-];
+function generatePerson() {
+  let gender = ch.gender();
+  let person = {
+    id: ch.string({length: 10, alpha: true}),
+    name: ch.first({ gender: gender }) + ' ' + ch.last(),
+    gender: gender,
+    age: ch.age()
+  };
+  return new Person(person.id, person.name, person.gender, person.age);
+}
+
+const PERSONS: Person[] = [];
+for (let i = 0; i <= 100; i++) {
+  PERSONS.push(generatePerson());
+}
 
 function generateAges() {
   let ages = [];
