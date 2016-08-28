@@ -90,6 +90,17 @@ export class OrderByAndSlicePipe implements PipeTransform {
   selector: 'my-app',
   pipes: [OrderByAndSlicePipe], // http://stackoverflow.com/a/39007605
   template: `
+
+  <nav class="navbar navbar-default navbar-static-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">
+          <img alt="Brand" src="../logo-original.svg">
+        </a>
+      </div>
+    </div>
+  </nav>
+
   <div class="container">
 
     <div class="section__add-person row">

@@ -9,9 +9,6 @@ h2, h3 {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: lighter;
 }
-body {
-  margin: 2em;
-}
 
 .selected-person.edit {
   color: red;
@@ -19,16 +16,25 @@ body {
 
 /* Overwrites */
 @media (min-width: 1200px) {
-    .container{
-        max-width: 750px;
-    }
+  .container{
+    max-width: 750px;
+  }
 }
 @media (min-width: 992px) {
   .container {
     width: 750px;
   }
 }
-
+.navbar-default {
+  background-color: rgb(0, 178, 193);
+}
+.navbar-brand {
+  height: 60px;
+  padding: 10px 10px;
+}
+.navbar-brand > img {
+  height: 35px;
+}
 .table > tbody > tr > td {
   vertical-align: middle;
 }
