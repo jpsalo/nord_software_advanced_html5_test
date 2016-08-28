@@ -95,7 +95,7 @@ export class OrderByAndSlicePipe implements PipeTransform {
     <div class="container-fluid">
       <div class="navbar-header">
         <a class="navbar-brand" href="#">
-          <img alt="Brand" src="../logo-original.svg">
+          <img alt="Brand" src="../logo-new.svg">
         </a>
       </div>
     </div>
