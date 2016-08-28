@@ -50,26 +50,39 @@ function generateAges() {
 
 const AGES = generateAges();
 
-@Pipe({ name: 'inRange' })
-export class InRangePipe implements PipeTransform {
-  transform(persons: Person[], page: number) {
-    let asd = [];
+@Pipe({ name: 'orderByAndSlice' })
+export class OrderByAndSlicePipe implements PipeTransform {
+  transform(persons: Person[], value: string, ascending: boolean, page: number) {
+    let resultArray;
+
+    if (value) {
+      if (ascending) {
+        resultArray = persons.sort(function(a, b) {
+          if (a[value] < b[value]) return -1;
+          if (a[value] > b[value]) return 1;
+          return 0;
+        });
+      } else {
+        resultArray = persons.sort(function(a, b) {
+          if (a[value] > b[value]) return -1;
+          if (a[value] < b[value]) return 1;
+          return 0;
+        });
+      }
+    } else {
+      resultArray = persons;
+    }
     let end = page * 20;
     let last = persons.length < end ? persons.length : end;
-    let start = end - 20;
-    console.log(start);
-    console.log(last);
-    for (let i = start ; i < last; i++) {
-      asd.push(persons[i]);
-    }
-    // return PERSONS.filter(person => person.gender === 'Male');
-    return asd;
+    let first = end - 20;
+
+    return resultArray.slice(first, last);
   }
 }
 
 @Component({
   selector: 'my-app',
-  pipes: [InRangePipe], // http://stackoverflow.com/a/39007605
+  pipes: [OrderByAndSlicePipe], // http://stackoverflow.com/a/39007605
   template: `
   <div class="container">
 
@@ -122,21 +135,29 @@ export class InRangePipe implements PipeTransform {
           <tr class="row">
             <th>
               <span class="left-edge-cell__text">Name</span>
-              <button class="btn btn-default" type="button">sort</button>
+              <button class="btn btn-default" type="button" (click)="sortBy('name')">
+                sort
+              </button>
             </th>
             <th>
               <span>Gender</span>
-              <button class="btn btn-default" type="button">sort</button>
+              <button class="btn btn-default" type="button" (click)="sortBy('gender')">
+                sort
+              </button>
             </th>
             <th>
               <span>Age</span>
-              <button class="btn btn-default" type="button">sort</button>
+              <button class="btn btn-default" type="button" (click)="sortBy('age')">
+                sort
+              </button>
             </th>
           </tr>
         </thead>
 
         <tbody>
-          <tr *ngFor="let person of (persons | inRange:currentPage)" class="row">
+          <tr *ngFor="let person of
+              (persons | orderByAndSlice:orderByValue:orderByAscending:currentPage)"
+              class="row">
 
             <td class="col-md-5">
               <span *ngIf="person !== selectedPerson" class="left-edge-cell__text">{{person.name}}</span>
@@ -206,7 +227,6 @@ export class AppComponent {
   };
   addNewPerson() {
     this.persons.push(this.model);
-    console.log(this.persons);
     this.model = new Person(null, null, "", null);
   };
   deletePerson() {
@@ -220,4 +240,11 @@ export class AppComponent {
     this.currentPage = pageNumber;
   };
   currentPage = 1;
+  orderByValue: string;
+  orderByAscending: boolean;
+  sortBy(value) {
+    if (this.currentPage !== 1) this.gotoPage(1);
+    this.orderByValue = value;
+    this.orderByAscending = !this.orderByAscending;
+  };
 }
