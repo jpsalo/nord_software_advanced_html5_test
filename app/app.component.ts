@@ -188,8 +188,8 @@ export class InRangePipe implements PipeTransform {
 
     <div class="text-center">
       <ul class="pagination">
-        <li *ngFor="let pageNumber of pages" (click)="gotoPage(pageNumber)">
-          <a>{{ pageNumber }}</a>
+        <li *ngFor="let pageNumber of pages">
+          <a (click)="gotoPage(pageNumber)">{{ pageNumber }}</a>
         </li>
       </ul>
     </div>
