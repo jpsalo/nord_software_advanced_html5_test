@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Pipe, PipeTransform } from '@angular/core';
+
 import * as chance from 'chance';
 var ch = new chance();
 
@@ -15,7 +16,7 @@ const GENDER = ['Male', 'Female'];
 
 function generatePerson() {
   let gender = GENDER[ch.integer({min: 0, max: 1})];
-  // let gender = ch.gender(); THIS IS NOT WORKING
+  // let gender = ch.gender(); NOTE: This is not working.
   let person = {
     id: ch.string({length: 10, alpha: true}),
     name: ch.first({ gender: gender }) + ' ' + ch.last(),
@@ -23,6 +24,15 @@ function generatePerson() {
     age: ch.age()
   };
   return new Person(person.id, person.name, person.gender, person.age);
+}
+
+function generatePaginationPages(dataArray) {
+  let numberOfPages = Math.ceil(dataArray.length / 20);
+  let paginationPages = [];
+  for (let i = 0; i < numberOfPages; i++) {
+    paginationPages.push(i + 1);
+  }
+  return paginationPages;
 }
 
 const PERSONS: Person[] = [];
@@ -40,8 +50,26 @@ function generateAges() {
 
 const AGES = generateAges();
 
+@Pipe({ name: 'inRange' })
+export class InRangePipe implements PipeTransform {
+  transform(persons: Person[], page: number) {
+    let asd = [];
+    let end = page * 20;
+    let last = persons.length < end ? persons.length : end;
+    let start = end - 20;
+    console.log(start);
+    console.log(last);
+    for (let i = start ; i < last; i++) {
+      asd.push(persons[i]);
+    }
+    // return PERSONS.filter(person => person.gender === 'Male');
+    return asd;
+  }
+}
+
 @Component({
   selector: 'my-app',
+  pipes: [InRangePipe], // http://stackoverflow.com/a/39007605
   template: `
   <div class="container">
 
@@ -88,7 +116,7 @@ const AGES = generateAges();
 
     <div class="row">
 
-            <table class="table table-striped" btn-lg>
+      <table class="table table-striped" btn-lg>
 
         <thead>
           <tr class="row">
@@ -108,7 +136,7 @@ const AGES = generateAges();
         </thead>
 
         <tbody>
-          <tr *ngFor="let person of persons" class="row">
+          <tr *ngFor="let person of (persons | inRange:currentPage)" class="row">
 
             <td class="col-md-5">
               <span *ngIf="person !== selectedPerson" class="left-edge-cell__text">{{person.name}}</span>
@@ -157,9 +185,19 @@ const AGES = generateAges();
         </tbody>
       </table>
     </div>
+
+    <div class="text-center">
+      <ul class="pagination">
+        <li *ngFor="let pageNumber of pages" (click)="gotoPage(pageNumber)">
+          <a>{{ pageNumber }}</a>
+        </li>
+      </ul>
+    </div>
+
   </div>
   `
 })
+
 export class AppComponent {
   persons = PERSONS;
   selectedPerson: Person;
@@ -174,6 +212,12 @@ export class AppComponent {
   deletePerson() {
     alert('Not yet :)');
   }
-  model = new Person(null, null, "", null);
+  model = new Person("", "", "", null);
   ages = AGES;
+  // http://stackoverflow.com/a/34409303
+  pages = generatePaginationPages(this.persons);
+  gotoPage(pageNumber) {
+    this.currentPage = pageNumber;
+  };
+  currentPage = 1;
 }

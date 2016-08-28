@@ -24,7 +24,7 @@ exports.Person = Person;
 var GENDER = ['Male', 'Female'];
 function generatePerson() {
     var gender = GENDER[ch.integer({ min: 0, max: 1 })];
-    // let gender = ch.gender(); THIS IS NOT WORKING
+    // let gender = ch.gender(); NOTE: This is not working.
     var person = {
         id: ch.string({ length: 10, alpha: true }),
         name: ch.first({ gender: gender }) + ' ' + ch.last(),
@@ -32,6 +32,14 @@ function generatePerson() {
         age: ch.age()
     };
     return new Person(person.id, person.name, person.gender, person.age);
+}
+function generatePaginationPages(dataArray) {
+    var numberOfPages = Math.ceil(dataArray.length / 20);
+    var paginationPages = [];
+    for (var i = 0; i < numberOfPages; i++) {
+        paginationPages.push(i + 1);
+    }
+    return paginationPages;
 }
 var PERSONS = [];
 for (var i = 0; i <= 100; i++) {
@@ -45,11 +53,37 @@ function generateAges() {
     return ages;
 }
 var AGES = generateAges();
+var InRangePipe = (function () {
+    function InRangePipe() {
+    }
+    InRangePipe.prototype.transform = function (persons, page) {
+        var asd = [];
+        var end = page * 20;
+        var last = persons.length < end ? persons.length : end;
+        var start = end - 20;
+        console.log(start);
+        console.log(last);
+        for (var i = start; i < last; i++) {
+            asd.push(persons[i]);
+        }
+        // return PERSONS.filter(person => person.gender === 'Male');
+        return asd;
+    };
+    InRangePipe = __decorate([
+        core_1.Pipe({ name: 'inRange' }), 
+        __metadata('design:paramtypes', [])
+    ], InRangePipe);
+    return InRangePipe;
+}());
+exports.InRangePipe = InRangePipe;
 var AppComponent = (function () {
     function AppComponent() {
         this.persons = PERSONS;
-        this.model = new Person(null, null, "", null);
+        this.model = new Person("", "", "", null);
         this.ages = AGES;
+        // http://stackoverflow.com/a/34409303
+        this.pages = generatePaginationPages(this.persons);
+        this.currentPage = 1;
     }
     AppComponent.prototype.toggleEditPersonDetails = function (person) {
         this.selectedPerson = (person === this.selectedPerson) ? undefined : person;
@@ -64,10 +98,15 @@ var AppComponent = (function () {
     AppComponent.prototype.deletePerson = function () {
         alert('Not yet :)');
     };
+    AppComponent.prototype.gotoPage = function (pageNumber) {
+        this.currentPage = pageNumber;
+    };
+    ;
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',
-            template: "\n  <div class=\"container\">\n\n    <div class=\"section__add-person row\">\n      <h1>Add a person</h1>\n      <form class=\"form-inline\" (ngSubmit)=\"addNewPerson()\"\n            #newPersonForm=\"ngForm\">\n        <div class=\"form-group col-md-5\">\n          <label class=\"sr-only\" for=\"personName\">Name</label>\n          <input type=\"text\" name=\"name\" id=\"personName\"\n                 class=\"form-control full-width input-lg\"\n                 #newPerson placeholder=\"Name\" required [(ngModel)]=\"model.name\">\n        </div>\n        <div class=\"form-group col-md-3\">\n          <label class=\"sr-only\" for=\"personGender\">Gender</label>\n          <select id=\"personGender\" name=\"gender\"\n                  class=\"form-control full-width input-lg\" required\n                  [(ngModel)]=\"model.gender\">\n            <option value=\"\" disabled selected>Gender</option>\n            <option value=\"Female\">Female</option>\n            <option value=\"Male\">Male</option>\n            <option value=\"Other\">Other</option>\n          </select>\n        </div>\n\n        <div class=\"form-group col-md-3 no-gutter__right\">\n          <label class=\"sr-only\" for=\"personAge\">Age</label>\n          <select id=\"personAge\" name=\"age\"\n                  class=\"form-control full-width input-lg\" required\n                  [(ngModel)]=\"model.age\">\n            <option value=null disabled selected>Age</option>\n            <option *ngFor=\"let age of ages\" [value]=\"age\">{{age}}</option>\n          </select>\n        </div>\n        <div class=\"col-md-1\n                pull-right\">\n          <button type=\" input-lgsubmit\"\n                  class=\"btn btn-default pull-right btn-lg\"\n                  (click)=\"addNewPerson(newPerson.value)\"\n                  [disabled]=\"!newPersonForm.form.valid\">+</button>\n        </div>\n      </form>\n    </div>\n\n    <div class=\"row\">\n\n            <table class=\"table table-striped\" btn-lg>\n\n        <thead>\n          <tr class=\"row\">\n            <th>\n              <span class=\"left-edge-cell__text\">Name</span>\n              <button class=\"btn btn-default\" type=\"button\">sort</button>\n            </th>\n            <th>\n              <span>Gender</span>\n              <button class=\"btn btn-default\" type=\"button\">sort</button>\n            </th>\n            <th>\n              <span>Age</span>\n              <button class=\"btn btn-default\" type=\"button\">sort</button>\n            </th>\n          </tr>\n        </thead>\n\n        <tbody>\n          <tr *ngFor=\"let person of persons\" class=\"row\">\n\n            <td class=\"col-md-5\">\n              <span *ngIf=\"person !== selectedPerson\" class=\"left-edge-cell__text\">{{person.name}}</span>\n              <span *ngIf=\"person === selectedPerson\">\n                <label class=\"sr-only\" for=\"selectedPersonName\">Name</label>\n                <input type=\"text\" class=\"form-control\" id=\"selectedPersonName\"\n                       [(ngModel)]=\"person.name\" placeholder=\"Name\">\n              </span>\n            </td>\n\n            <td class=\"col-md-3\">\n              <div *ngIf=\"person !== selectedPerson\">{{person.gender}}</div>\n              <div *ngIf=\"person === selectedPerson\" class=\"cell__editable\">\n                <label class=\"sr-only\" for=\"selectedPersonGender\">Gender</label>\n                <select id=\"selectedPersonGender\" name=\"gender\" class=\"form-control\"\n                        required [(ngModel)]=\"person.gender\">\n                  <option value=\"Female\">Female</option>\n                  <option value=\"Male\">Male</option>\n                  <option value=\"Other\">Other</option>\n                </select>\n              </div>\n            </td>\n\n            <td class=\"col-md-2\">\n              <div *ngIf=\"person !== selectedPerson\">{{person.age}}</div>\n              <div *ngIf=\"person === selectedPerson\" class=\"cell__editable\">\n                <label class=\"sr-only\" for=\"selectedPersonAge\">Age</label>\n                <select id=\"selectedPersonAge\" name=\"age\" class=\"form-control\"\n                        required [(ngModel)]=\"person.age\">\n                  <option *ngFor=\"let age of ages\" [value]=\"age\">{{age}}</option>\n                </select>\n              </div>\n            </td>\n\n            <td class=\"col-md-2\">\n              <button class=\"btn btn-default edit\" type=\"button\"\n                      [class.selected-person]=\"person === selectedPerson\"\n                      (click)=\"toggleEditPersonDetails(person)\">\n                      edit\n              </button>\n              <button class=\"btn btn-default pull-right\" type=\"button\"\n                      (click)=\"deletePerson(person)\">x\n              </button>\n            </td>\n          </tr>\n        </tbody>\n      </table>\n    </div>\n  </div>\n  "
+            pipes: [InRangePipe],
+            template: "\n  <div class=\"container\">\n\n    <div class=\"section__add-person row\">\n      <h1>Add a person</h1>\n      <form class=\"form-inline\" (ngSubmit)=\"addNewPerson()\"\n            #newPersonForm=\"ngForm\">\n        <div class=\"form-group col-md-5\">\n          <label class=\"sr-only\" for=\"personName\">Name</label>\n          <input type=\"text\" name=\"name\" id=\"personName\"\n                 class=\"form-control full-width input-lg\"\n                 #newPerson placeholder=\"Name\" required [(ngModel)]=\"model.name\">\n        </div>\n        <div class=\"form-group col-md-3\">\n          <label class=\"sr-only\" for=\"personGender\">Gender</label>\n          <select id=\"personGender\" name=\"gender\"\n                  class=\"form-control full-width input-lg\" required\n                  [(ngModel)]=\"model.gender\">\n            <option value=\"\" disabled selected>Gender</option>\n            <option value=\"Female\">Female</option>\n            <option value=\"Male\">Male</option>\n            <option value=\"Other\">Other</option>\n          </select>\n        </div>\n\n        <div class=\"form-group col-md-3 no-gutter__right\">\n          <label class=\"sr-only\" for=\"personAge\">Age</label>\n          <select id=\"personAge\" name=\"age\"\n                  class=\"form-control full-width input-lg\" required\n                  [(ngModel)]=\"model.age\">\n            <option value=null disabled selected>Age</option>\n            <option *ngFor=\"let age of ages\" [value]=\"age\">{{age}}</option>\n          </select>\n        </div>\n        <div class=\"col-md-1\n                pull-right\">\n          <button type=\" input-lgsubmit\"\n                  class=\"btn btn-default pull-right btn-lg\"\n                  (click)=\"addNewPerson(newPerson.value)\"\n                  [disabled]=\"!newPersonForm.form.valid\">+</button>\n        </div>\n      </form>\n    </div>\n\n    <div class=\"row\">\n\n      <table class=\"table table-striped\" btn-lg>\n\n        <thead>\n          <tr class=\"row\">\n            <th>\n              <span class=\"left-edge-cell__text\">Name</span>\n              <button class=\"btn btn-default\" type=\"button\">sort</button>\n            </th>\n            <th>\n              <span>Gender</span>\n              <button class=\"btn btn-default\" type=\"button\">sort</button>\n            </th>\n            <th>\n              <span>Age</span>\n              <button class=\"btn btn-default\" type=\"button\">sort</button>\n            </th>\n          </tr>\n        </thead>\n\n        <tbody>\n          <tr *ngFor=\"let person of (persons | inRange:currentPage)\" class=\"row\">\n\n            <td class=\"col-md-5\">\n              <span *ngIf=\"person !== selectedPerson\" class=\"left-edge-cell__text\">{{person.name}}</span>\n              <span *ngIf=\"person === selectedPerson\">\n                <label class=\"sr-only\" for=\"selectedPersonName\">Name</label>\n                <input type=\"text\" class=\"form-control\" id=\"selectedPersonName\"\n                       [(ngModel)]=\"person.name\" placeholder=\"Name\">\n              </span>\n            </td>\n\n            <td class=\"col-md-3\">\n              <div *ngIf=\"person !== selectedPerson\">{{person.gender}}</div>\n              <div *ngIf=\"person === selectedPerson\" class=\"cell__editable\">\n                <label class=\"sr-only\" for=\"selectedPersonGender\">Gender</label>\n                <select id=\"selectedPersonGender\" name=\"gender\" class=\"form-control\"\n                        required [(ngModel)]=\"person.gender\">\n                  <option value=\"Female\">Female</option>\n                  <option value=\"Male\">Male</option>\n                  <option value=\"Other\">Other</option>\n                </select>\n              </div>\n            </td>\n\n            <td class=\"col-md-2\">\n              <div *ngIf=\"person !== selectedPerson\">{{person.age}}</div>\n              <div *ngIf=\"person === selectedPerson\" class=\"cell__editable\">\n                <label class=\"sr-only\" for=\"selectedPersonAge\">Age</label>\n                <select id=\"selectedPersonAge\" name=\"age\" class=\"form-control\"\n                        required [(ngModel)]=\"person.age\">\n                  <option *ngFor=\"let age of ages\" [value]=\"age\">{{age}}</option>\n                </select>\n              </div>\n            </td>\n\n            <td class=\"col-md-2\">\n              <button class=\"btn btn-default edit\" type=\"button\"\n                      [class.selected-person]=\"person === selectedPerson\"\n                      (click)=\"toggleEditPersonDetails(person)\">\n                      edit\n              </button>\n              <button class=\"btn btn-default pull-right\" type=\"button\"\n                      (click)=\"deletePerson(person)\">x\n              </button>\n            </td>\n          </tr>\n        </tbody>\n      </table>\n    </div>\n\n    <div class=\"text-center\">\n      <ul class=\"pagination\">\n        <li *ngFor=\"let pageNumber of pages\" (click)=\"gotoPage(pageNumber)\">\n          <a>{{ pageNumber }}</a>\n        </li>\n      </ul>\n    </div>\n\n  </div>\n  "
         }), 
         __metadata('design:paramtypes', [])
     ], AppComponent);
