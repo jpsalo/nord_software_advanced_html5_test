@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import * as chance from 'chance';
 var ch = new chance();
 
@@ -12,8 +11,11 @@ export class Person {
   ) { }
 }
 
+const GENDER = ['Male', 'Female'];
+
 function generatePerson() {
-  let gender = ch.gender();
+  let gender = GENDER[ch.integer({min: 0, max: 1})];
+  // let gender = ch.gender(); THIS IS NOT WORKING
   let person = {
     id: ch.string({length: 10, alpha: true}),
     name: ch.first({ gender: gender }) + ' ' + ch.last(),

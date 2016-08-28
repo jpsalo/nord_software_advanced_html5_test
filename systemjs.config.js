@@ -44,7 +44,10 @@
   ngPackageNames.forEach(setPackageConfig);
   var config = {
     map: map,
-    packages: packages
+    packages: packages,
+    paths: {
+      'chance': 'node_modules/chance/chance.js'
+    }
   };
   System.config(config);
 })(this);

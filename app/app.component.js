@@ -21,8 +21,10 @@ var Person = (function () {
     return Person;
 }());
 exports.Person = Person;
+var GENDER = ['Male', 'Female'];
 function generatePerson() {
-    var gender = ch.gender();
+    var gender = GENDER[ch.integer({ min: 0, max: 1 })];
+    // let gender = ch.gender(); THIS IS NOT WORKING
     var person = {
         id: ch.string({ length: 10, alpha: true }),
         name: ch.first({ gender: gender }) + ' ' + ch.last(),
