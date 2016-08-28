@@ -136,36 +136,49 @@ export class OrderByAndSlicePipe implements PipeTransform {
         </div>
         <div class="col-md-1
                 pull-right">
-          <button type=" input-lgsubmit"
-                  class="btn btn-default pull-right btn-lg"
+          <button type="submit" class="btn btn-default pull-right btn-lg"
                   (click)="addNewPerson(newPerson.value)"
-                  [disabled]="!newPersonForm.form.valid">+</button>
+                  [disabled]="!newPersonForm.form.valid" aria-label="Left Align">
+            <span class="glyphicon glyphicon-plus icon-add" aria-hidden="true"></span>
+          </button>
         </div>
       </form>
     </div>
 
-    <div class="row">
+    <div class="row section__persons-list">
 
       <table class="table table-striped" btn-lg>
 
         <thead>
           <tr class="row">
             <th>
-              <span class="left-edge-cell__text">Name</span>
-              <button class="btn btn-default" type="button" (click)="sortBy('name')">
-                sort
+              <span class="heading-text left-edge-cell__text">Name</span>
+              <button type="button" class="btn btn-link" aria-label="Left Align"
+                       (click)="sortBy('name')">
+                <span class="glyphicon glyphicon-signal icon-sort"
+                      [class.active]="orderByValue === 'name'"
+                      [class.ascending]="orderByValue === 'name' && orderByAscending"
+                      aria-hidden="true"></span>
               </button>
             </th>
             <th>
-              <span>Gender</span>
-              <button class="btn btn-default" type="button" (click)="sortBy('gender')">
-                sort
+              <span class="heading-text">Gender</span>
+              <button type="button" class="btn btn-link" aria-label="Left Align"
+                       (click)="sortBy('gender')">
+                <span class="glyphicon glyphicon-signal icon-sort"
+                      [class.active]="orderByValue === 'gender'"
+                      [class.ascending]="orderByValue === 'gender' && orderByAscending"
+                      aria-hidden="true"></span>
               </button>
             </th>
             <th>
-              <span>Age</span>
-              <button class="btn btn-default" type="button" (click)="sortBy('age')">
-                sort
+              <span class="heading-text">Age</span>
+              <button type="button" class="btn btn-link" aria-label="Left Align"
+                       (click)="sortBy('age')">
+                <span class="glyphicon glyphicon-signal icon-sort"
+                      [class.active]="orderByValue === 'age'"
+                      [class.ascending]="orderByValue === 'age' && orderByAscending"
+                      aria-hidden="true"></span>
               </button>
             </th>
           </tr>
@@ -180,7 +193,7 @@ export class OrderByAndSlicePipe implements PipeTransform {
               <span *ngIf="person !== selectedPerson" class="left-edge-cell__text">{{person.name}}</span>
               <span *ngIf="person === selectedPerson">
                 <label class="sr-only" for="selectedPersonName">Name</label>
-                <input type="text" class="form-control" id="selectedPersonName"
+                <input type="text" class="form-control input-lg cell__input" id="selectedPersonName"
                        [(ngModel)]="person.name" placeholder="Name">
               </span>
             </td>
@@ -189,7 +202,8 @@ export class OrderByAndSlicePipe implements PipeTransform {
               <div *ngIf="person !== selectedPerson">{{person.gender}}</div>
               <div *ngIf="person === selectedPerson" class="cell__editable">
                 <label class="sr-only" for="selectedPersonGender">Gender</label>
-                <select id="selectedPersonGender" name="gender" class="form-control"
+                <select id="selectedPersonGender" name="gender"
+                        class="form-control input-lg"
                         required [(ngModel)]="person.gender">
                   <option value="Female">Female</option>
                   <option value="Male">Male</option>
@@ -202,7 +216,8 @@ export class OrderByAndSlicePipe implements PipeTransform {
               <div *ngIf="person !== selectedPerson">{{person.age}}</div>
               <div *ngIf="person === selectedPerson" class="cell__editable">
                 <label class="sr-only" for="selectedPersonAge">Age</label>
-                <select id="selectedPersonAge" name="age" class="form-control"
+                <select id="selectedPersonAge" name="age"
+                        class="form-control input-lg"
                         required [(ngModel)]="person.age">
                   <option *ngFor="let age of ages" [value]="age">{{age}}</option>
                 </select>
@@ -210,13 +225,17 @@ export class OrderByAndSlicePipe implements PipeTransform {
             </td>
 
             <td class="col-md-2">
-              <button class="btn btn-default edit" type="button"
-                      [class.selected-person]="person === selectedPerson"
+              <button type="button" class="btn btn-link edit" aria-label="Left Align"
                       (click)="toggleEditPersonDetails(person)">
-                      edit
+                <span class="glyphicon glyphicon-pencil icon-edit"
+                      [class.active]="person === selectedPerson"
+                      aria-hidden="true">
+                </span>
               </button>
-              <button class="btn btn-default pull-right" type="button"
-                      (click)="deletePerson(person)">x
+              <button type="button" class="btn btn-link pull-right"
+                      aria-label="Left Align"
+                      (click)="deletePerson(person)">
+                <span class="glyphicon glyphicon-remove icon-remove" aria-hidden="true"></span>
               </button>
             </td>
           </tr>

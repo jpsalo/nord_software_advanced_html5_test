@@ -1,13 +1,10 @@
 /* Master Styles */
-h1 {
-  color: #369;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 250%;
+body {
+  color: rgb(120, 120, 120);
 }
-h2, h3 {
-  color: #444;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: lighter;
+h1 {
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+  font-size: 250%;
 }
 
 .selected-person.edit {
@@ -38,19 +35,34 @@ h2, h3 {
 .table > tbody > tr > td {
   vertical-align: middle;
 }
+.table > tbody > tr {
+   line-height: 65px;
+   min-height: 65px;
+   height: 65px;
+}
+.table-striped>tbody>tr:nth-of-type(odd) {
+  background-color: rgb(238, 243, 250);
+}
+.table>tbody>tr>td {
+  border-top: none;
+}
+.table>thead>tr>th {
+  border-bottom: none;
+}
 
+/* Magical aligns */
 .left-edge-cell__text {
   padding-left: 13px;
 }
-
+.cell__input {
+  padding-left: 12px;
+}
 .cell__editable {
   margin-left: -9px;
 }
-
 .form-inline >:first-child {
   margin-left: -15px;
 }
-
 .form-inline >:last-child {
   margin-right: -15px;
 }
@@ -64,9 +76,53 @@ h2, h3 {
 }
 
 .section__add-person {
-  padding-bottom: 50px;
+  padding-bottom: 80px;
+}
+
+.section__add-person >:not(:first-child) {
+  padding-top: 25px;
 }
 
 .no-gutter__right {
   padding-right: 0;
+}
+
+.section__add-person .form-control,
+.section__add-person .btn {
+  background-color: rgb(241, 241, 241)
+}
+
+.section__persons-list .form-control {
+  background-color: inherit;
+  /* http://stackoverflow.com/a/30202822 */
+  border: 0;
+  outline: 1px solid #CCC;
+  margin-left: 1px;
+}
+
+.heading-text {
+  font-size: smaller;
+}
+
+.icon-sort,
+.icon-edit,
+.icon-remove {
+  color: rgb(169, 169, 169);
+}
+
+.icon-add {
+  line-height: inherit;
+}
+
+.icon-edit.active,
+.icon-sort.active {
+  color: inherit;
+}
+
+.icon-sort {
+  transform: scale(-1, 1) rotate(-90deg);
+}
+
+.icon-sort.ascending {
+  transform: rotate(90deg);
 }
