@@ -13,3 +13,54 @@ body {
   margin: 2em;
 }
 
+.selected-person.edit {
+  color: red;
+}
+
+/* Overwrites */
+@media (min-width: 1200px) {
+    .container{
+        max-width: 750px;
+    }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 750px;
+  }
+}
+
+.table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+.left-edge-cell__text {
+  padding-left: 13px;
+}
+
+.cell__editable {
+  margin-left: -9px;
+}
+
+.form-inline >:first-child {
+  margin-left: -15px;
+}
+
+.form-inline >:last-child {
+  margin-right: -15px;
+}
+
+.form-control {
+  font-size: medium;
+}
+
+.form-control.full-width {
+  width: 100%;
+}
+
+.section__add-person {
+  padding-bottom: 50px;
+}
+
+.no-gutter__right {
+  padding-right: 0;
+}
