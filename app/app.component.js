@@ -21,13 +21,20 @@ var Person = (function () {
     return Person;
 }());
 exports.Person = Person;
-var GENDER = ['Male', 'Female'];
+var GENDER = ['Male', 'Female', 'Other'];
 function generatePerson() {
-    var gender = GENDER[ch.integer({ min: 0, max: 1 })];
+    var gender = GENDER[ch.integer({ min: 0, max: 2 })];
     // let gender = ch.gender(); NOTE: This is not working.
+    var name;
+    if (gender !== 'Other') {
+        name = ch.first({ gender: gender }) + ' ' + ch.last();
+    }
+    else {
+        name = ch.name();
+    }
     var person = {
         id: ch.string({ length: 10, alpha: true }),
-        name: ch.first({ gender: gender }) + ' ' + ch.last(),
+        name: name,
         gender: gender,
         age: ch.age()
     };

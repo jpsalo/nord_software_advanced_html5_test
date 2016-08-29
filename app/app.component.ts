@@ -12,14 +12,20 @@ export class Person {
   ) { }
 }
 
-const GENDER = ['Male', 'Female'];
+const GENDER = ['Male', 'Female', 'Other'];
 
 function generatePerson() {
-  let gender = GENDER[ch.integer({min: 0, max: 1})];
+  let gender = GENDER[ch.integer({min: 0, max: 2})];
   // let gender = ch.gender(); NOTE: This is not working.
+  let name: string;
+  if (gender !== 'Other') {
+    name = ch.first({ gender: gender }) + ' ' + ch.last();
+  } else {
+    name = ch.name();
+  }
   let person = {
     id: ch.string({length: 10, alpha: true}),
-    name: ch.first({ gender: gender }) + ' ' + ch.last(),
+    name: name,
     gender: gender,
     age: ch.age()
   };
