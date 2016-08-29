@@ -114,13 +114,13 @@ export class OrderByAndSlicePipe implements PipeTransform {
       <h1>Add a person</h1>
       <form class="form-inline" (ngSubmit)="addNewPerson()"
             #newPersonForm="ngForm">
-        <div class="form-group col-md-5">
+        <div class="form-group col-sm-5">
           <label class="sr-only" for="personName">Name</label>
           <input type="text" name="name" id="personName"
                  class="form-control full-width input-lg"
                  #newPerson placeholder="Name" required [(ngModel)]="model.name">
         </div>
-        <div class="form-group col-md-3">
+        <div class="form-group col-sm-3">
           <label class="sr-only" for="personGender">Gender</label>
           <select id="personGender" name="gender"
                   class="form-control full-width input-lg" required
@@ -132,7 +132,7 @@ export class OrderByAndSlicePipe implements PipeTransform {
           </select>
         </div>
 
-        <div class="form-group col-md-3 no-gutter__right">
+        <div class="form-group col-sm-3 no-gutter__right">
           <label class="sr-only" for="personAge">Age</label>
           <select id="personAge" name="age"
                   class="form-control full-width input-lg" required
@@ -141,7 +141,7 @@ export class OrderByAndSlicePipe implements PipeTransform {
             <option *ngFor="let age of ages" [value]="age">{{age}}</option>
           </select>
         </div>
-        <div class="col-md-1
+        <div class="col-sm-1
                 pull-right">
           <button type="submit" class="btn btn-default pull-right btn-lg"
                   (click)="addNewPerson(newPerson.value)"
