@@ -277,6 +277,34 @@ export class OrderByAndSlicePipe implements PipeTransform {
       </ul>
     </nav>
 
+    <!-- The Modal -->
+    <div [class.visible]="modalVisible" class="my-modal">
+      <!-- Modal content -->
+      <div class="my-modal-content text-center">
+        <div class="my-modal-header">
+          <h2>Remove person</h2>
+        </div>
+        <div class="my-modal-body">
+          <p>Are you sure you want to remove this entry?</p>
+        </div>
+        <div class="my-modal-footer">
+          <div style="max-width: 400px; margin: auto;">
+            <span style="width: 50% max-width: 150px; display: inline-block;">
+              <button type="button" class="btn btn-default btn-block btn-lg button-reject" (click)="closeModal()">
+                CANCEL
+              </button>
+            </span>
+            <span style="width: 50%; max-width: 150px; display: inline-block;">
+              <button type="button" class="btn btn-default btn-block btn-lg button-confirm" (click)="closeModal(true)">
+                YES
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </div>
   `
 })
@@ -287,6 +315,12 @@ export class AppComponent {
   ages = AGES;
   selectedPerson: Person;
   personFieldInEdit: boolean;
+  personToDelete: Person;
+  doDeletePerson() {
+    this.persons.splice(this.persons.indexOf(this.personToDelete), 1);
+    this.persons = this.persons.concat();
+    this.pages = generatePaginationPages(this.persons);
+  };
   toggleEditPersonDetails(person: Person): void {
     if (person === this.selectedPerson) this.endEditPersonDetails(person);
     else this.editPersonDetails(person);
@@ -309,10 +343,8 @@ export class AppComponent {
     this.pages = generatePaginationPages(this.persons);
   };
   deletePerson(person) {
-    // TODO:  Add confirm for deletion.
-    this.persons.splice(this.persons.indexOf(person), 1);
-    this.persons = this.persons.concat();
-    this.pages = generatePaginationPages(this.persons);
+    this.openModal();
+    this.personToDelete = person;
   };
   orderByValue: string;
   orderByAscending: boolean;
@@ -354,5 +386,13 @@ export class AppComponent {
       event.target.blur();
       this.endEditPersonDetails(person);
     }
+  };
+  modalVisible: boolean;
+  openModal() {
+    this.modalVisible = true;
+  };
+  closeModal(confirmDelete) {
+    this.modalVisible = false;
+    if (confirmDelete) this.doDeletePerson();
   };
 }
