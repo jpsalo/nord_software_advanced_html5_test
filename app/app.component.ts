@@ -108,7 +108,7 @@ export class OrderByAndSlicePipe implements PipeTransform {
     </div>
   </nav>
 
-  <div class="container">
+  <div class="container main">
 
     <div class="section__add-person row">
       <h1>Add a person</h1>
