@@ -181,13 +181,18 @@ var AppComponent = (function () {
             this.gotoPage(this.currentPage + 1);
     };
     ;
+    AppComponent.prototype.isEmpty = function (str) {
+        return (!str || 0 === str.length);
+    };
+    ;
     AppComponent.prototype.onKey = function (event, person) {
-        if (event.keyCode == 13 || event.keyCode == 27) {
+        if ((event.keyCode == 13 || event.keyCode == 27) &&
+            !this.isEmpty(person.name)) {
             event.target.blur();
             this.endEditPersonDetails(person);
         }
-        ;
     };
+    ;
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',

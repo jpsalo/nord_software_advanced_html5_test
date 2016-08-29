@@ -345,10 +345,14 @@ export class AppComponent {
     if (this.currentPage !== this.pages[this.pages.length - 1])
       this.gotoPage(this.currentPage + 1);
   };
+  isEmpty(str) {
+    return (!str || 0 === str.length);
+  };
   onKey(event: any, person: Person) {
-    if (event.keyCode == 13 || event.keyCode == 27) {
+    if ((event.keyCode == 13 || event.keyCode == 27) &&
+      !this.isEmpty(person.name)) {
       event.target.blur();
       this.endEditPersonDetails(person);
-    };
-  }
+    }
+  };
 }
