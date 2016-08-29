@@ -228,7 +228,7 @@ export class OrderByAndSlicePipe implements PipeTransform {
             </td>
 
             <td class="col-md-2">
-              <button type="button" class="btn btn-link edit" aria-label="Left Align"
+              <button type="button" class="btn btn-link" aria-label="Left Align"
                       (click)="toggleEditPersonDetails(person)">
                 <span class="glyphicon glyphicon-pencil icon-edit"
                       [class.active]="person === selectedPerson"
@@ -273,6 +273,8 @@ export class OrderByAndSlicePipe implements PipeTransform {
 
 export class AppComponent {
   persons = PERSONS;
+  model = new Person("", "", "", null);
+  ages = AGES;
   selectedPerson: Person;
   personFieldInEdit: boolean;
   toggleEditPersonDetails(person: Person): void {
@@ -294,21 +296,19 @@ export class AppComponent {
     this.persons.splice(this.persons.indexOf(person), 1);
     this.persons = this.persons.concat();
     this.pages = generatePaginationPages(this.persons);
-  }
-  model = new Person("", "", "", null);
-  ages = AGES;
-  // http://stackoverflow.com/a/34409303
-  pages = generatePaginationPages(this.persons);
-  gotoPage(pageNumber) {
-    this.currentPage = pageNumber;
   };
-  currentPage = 1;
   orderByValue: string;
   orderByAscending: boolean;
   sortBy(value) {
     if (this.currentPage !== 1) this.gotoPage(1);
     this.orderByValue = value;
     this.orderByAscending = !this.orderByAscending;
+  };
+  // http://stackoverflow.com/a/34409303
+  pages = generatePaginationPages(this.persons);
+  currentPage: number = 1;
+  gotoPage(pageNumber) {
+    this.currentPage = pageNumber;
   };
   isPaginationArrowVisible(direction) {
     let isVisible = false;

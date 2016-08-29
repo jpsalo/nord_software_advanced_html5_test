@@ -7,11 +7,7 @@ h1 {
   font-size: 250%;
 }
 
-.selected-person.edit {
-  color: red;
-}
-
-/* Overwrites */
+/* OVERWRITES */
 @media (min-width: 1200px) {
   .container{
     max-width: 750px;
@@ -72,16 +68,13 @@ h1 {
   background-color: inherit;
 }
 
-.pagination >.active > a {
-}
-
 .pagination >.active > a,
 .pagination >.active > a:hover {
   color: rgb(120, 120, 120);
   background-color: rgb(208, 238, 240);
 }
 
-/* Magical aligns */
+/* MAGICAL ALIGNS */
 .left-edge-cell__text {
   padding-left: 13px;
 }
@@ -98,14 +91,24 @@ h1 {
   margin-right: -15px;
 }
 
+/* SIZING & POSITIONING & UTILITIES */
 .form-control {
   font-size: medium;
 }
-
 .form-control.full-width {
   width: 100%;
 }
+.no-gutter__right {
+  padding-right: 0;
+}
+.invisible {
+  visibility: hidden;
+}
+.heading-text {
+  font-size: smaller;
+}
 
+/* ADD PERSON */
 .section__add-person {
   padding-bottom: 80px;
 }
@@ -114,60 +117,42 @@ h1 {
   padding-top: 25px;
 }
 
-.no-gutter__right {
-  padding-right: 0;
-}
-
 .section__add-person .form-control,
 .section__add-person .btn {
   background-color: rgb(241, 241, 241)
 }
 
-.section__persons-list .form-control {
-  background-color: inherit;
-  /* http://stackoverflow.com/a/30202822 */
-  border: 0;
-  /*outline: 1px solid #CCC;*/
-  margin-left: 1px;
-}
-
-.heading-text {
-  font-size: smaller;
-}
-
+/* ICONS */
 .icon-sort,
 .icon-edit,
 .icon-remove {
   color: rgb(169, 169, 169);
 }
-
 .icon-add {
   line-height: inherit;
 }
-
 .icon-edit.active,
 .icon-sort.active {
   color: inherit;
 }
-
 .icon-sort {
   transform: scale(-1, 1) rotate(-90deg);
 }
-
 .icon-sort.ascending {
   transform: rotate(90deg);
 }
 
-.invisible {
-  visibility: hidden;
-}
-
+/* PERSONS LIST */
 /* Disable all interaction */
 .section__persons-list .person-row.inactive .form-control {
   pointer-events: none;
 }
 
 .section__persons-list .form-control {
+  background-color: inherit;
+  /* http://stackoverflow.com/a/30202822 */
+  border: 0;
+  margin-left: 1px;
   box-shadow: none;
   outline: none;
 }
