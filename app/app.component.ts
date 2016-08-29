@@ -197,7 +197,7 @@ export class OrderByAndSlicePipe implements PipeTransform {
                 <input type="text" class="form-control input-lg cell__input"
                        [class.active]="person === selectedPerson"
                        id="selectedPersonName"
-                       (keyup)="onKey($event)"
+                       (keyup)="onKey($event, person)"
                        [(ngModel)]="person.name" placeholder="Name">
               </span>
             </td>
@@ -279,7 +279,14 @@ export class AppComponent {
   selectedPerson: Person;
   personFieldInEdit: boolean;
   toggleEditPersonDetails(person: Person): void {
-    this.selectedPerson = (person === this.selectedPerson) ? undefined : person;
+    if (person === this.selectedPerson) this.endEditPersonDetails(person);
+    else this.editPersonDetails(person);
+  };
+  editPersonDetails(person: Person) {
+    this.selectedPerson = person;
+  };
+  endEditPersonDetails(person: Person): void {
+    this.selectedPerson = undefined;
   };
   addNewPerson() {
     this.model.id = ch.string({length: 10, alpha: true});
@@ -329,7 +336,10 @@ export class AppComponent {
     if (this.currentPage !== this.pages[this.pages.length - 1])
       this.gotoPage(this.currentPage + 1);
   };
-  onKey(event: any) {
-    if (event.keyCode == 13 || event.keyCode == 27) event.target.blur();
-  };
+  onKey(event: any, person: Person) {
+    if (event.keyCode == 13 || event.keyCode == 27) {
+      event.target.blur();
+      this.endEditPersonDetails(person);
+    };
+  }
 }
