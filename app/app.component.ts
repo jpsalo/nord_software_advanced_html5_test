@@ -235,20 +235,23 @@ export class OrderByAndSlicePipe implements PipeTransform {
             </td>
 
             <td class="col-md-2">
-              <button type="button" class="btn btn-link" aria-label="Left Align"
-                      (click)="toggleEditPersonDetails(person)">
-                <span class="glyphicon glyphicon-pencil icon-edit"
-                      [class.active]="person === selectedPerson"
-                      aria-hidden="true">
-                </span>
-              </button>
-              <button type="button" class="btn btn-link pull-right"
-                      aria-label="Left Align"
-                      (click)="deletePerson(person)">
-                <span class="glyphicon glyphicon-remove icon-remove"
-                      aria-hidden="true">
-                </span>
-              </button>
+              <div class="pull-right">
+                <button type="button" class="btn btn-link" aria-label="Left Align"
+                        (click)="toggleEditPersonDetails(person)">
+                  <span class="glyphicon glyphicon-pencil icon-edit"
+                        [class.active]="person === selectedPerson"
+                        aria-hidden="true">
+                  </span>
+                </button>
+                <div class="divider"></div>
+                <button type="button" class="btn btn-link"
+                        aria-label="Left Align"
+                        (click)="deletePerson(person)">
+                  <span class="glyphicon glyphicon-remove icon-remove"
+                        aria-hidden="true">
+                  </span>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>

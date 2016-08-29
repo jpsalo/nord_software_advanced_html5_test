@@ -94,6 +94,7 @@ h1 {
 /* SIZING & POSITIONING & UTILITIES */
 .form-control {
   font-size: medium;
+  color: rgb(120, 120, 120);
 }
 .form-control.full-width {
   width: 100%;
@@ -106,6 +107,14 @@ h1 {
 }
 .heading-text {
   font-size: smaller;
+}
+.divider {
+  border-left: 1px solid rgb(225, 231, 238);
+  width: 1px;
+  display: inline;
+  vertical-align: middle;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 /* ADD PERSON */
@@ -123,10 +132,13 @@ h1 {
 }
 
 /* ICONS */
-.icon-sort,
+.icon-sort {
+  color: rgb(169, 169, 169);
+}
+
 .icon-edit,
 .icon-remove {
-  color: rgb(169, 169, 169);
+  color: rgb(202, 210, 218);
 }
 .icon-add {
   line-height: inherit;
