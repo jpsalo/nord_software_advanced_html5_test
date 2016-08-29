@@ -197,6 +197,7 @@ export class OrderByAndSlicePipe implements PipeTransform {
                 <input type="text" class="form-control input-lg cell__input"
                        [class.active]="person === selectedPerson"
                        id="selectedPersonName"
+                       (keyup)="onKey($event)"
                        [(ngModel)]="person.name" placeholder="Name">
               </span>
             </td>
@@ -327,5 +328,8 @@ export class AppComponent {
   gotoNextPage() {
     if (this.currentPage !== this.pages[this.pages.length - 1])
       this.gotoPage(this.currentPage + 1);
+  };
+  onKey(event: any) {
+    if (event.keyCode == 13 || event.keyCode == 27) event.target.blur();
   };
 }
