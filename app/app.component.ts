@@ -36,6 +36,7 @@ function generatePaginationPages(dataArray) {
 }
 
 const NUMBER_OF_INITIAL_PERSONS: number = 100;
+const VISIBLE_PAGINATION_LINKS: number = 4;
 
 const PERSONS: Person[] = [];
 for (let i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
@@ -243,13 +244,24 @@ export class OrderByAndSlicePipe implements PipeTransform {
       </table>
     </div>
 
-    <div class="text-center">
-      <ul class="pagination">
-        <li *ngFor="let pageNumber of pages">
+    <nav class="text-center" aria-label="Page navigation">
+      <ul class="pagination pagination-lg">
+        <li [class.invisible]="!isPaginationArrowVisible('previous')">
+          <a aria-label="Previous" (click)="gotoPreviousPage()">
+            <span aria-hidden="true">&hellip;</span>
+          </a>
+        </li>
+        <li *ngFor="let pageNumber of pages"
+            [class.active]="pageNumber === currentPage">
           <a (click)="gotoPage(pageNumber)">{{ pageNumber }}</a>
         </li>
+        <li [class.invisible]="!isPaginationArrowVisible('next')">
+          <a aria-label="Next" (click)="gotoNextPage()">
+            <span aria-hidden="true">&hellip;</span>
+          </a>
+        </li>
       </ul>
-    </div>
+    </nav>
 
   </div>
   `
@@ -292,5 +304,23 @@ export class AppComponent {
     if (this.currentPage !== 1) this.gotoPage(1);
     this.orderByValue = value;
     this.orderByAscending = !this.orderByAscending;
+  };
+  isPaginationArrowVisible(direction) {
+    let isVisible = false;
+    if (direction === 'previous' && this.currentPage !== this.pages[0]) {
+      isVisible = true;
+    } else if (direction === 'next' &&
+               this.currentPage !== this.pages[this.pages.length - 1])
+    {
+      isVisible = true;
+    }
+    return isVisible;
+  };
+  gotoPreviousPage() {
+    if (this.currentPage !== this.pages[0]) this.gotoPage(this.currentPage - 1);
+  };
+  gotoNextPage() {
+    if (this.currentPage !== this.pages[this.pages.length - 1])
+      this.gotoPage(this.currentPage + 1);
   };
 }

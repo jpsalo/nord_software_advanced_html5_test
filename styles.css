@@ -50,6 +50,37 @@ h1 {
   border-bottom: none;
 }
 
+/* PAGINATION */
+.pagination > li > a,
+.pagination > li > span {
+  color: rgb(120, 120, 120);
+}
+.pagination > li > a,
+.pagination > li > span,
+.pagination > li:first-child > a,
+.pagination > li:first-child > span,
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+  border: none;
+  border-radius: 50%;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover {
+  background-color: inherit;
+}
+
+.pagination >.active > a {
+}
+
+.pagination >.active > a,
+.pagination >.active > a:hover {
+  color: rgb(120, 120, 120);
+  background-color: rgb(208, 238, 240);
+}
+
 /* Magical aligns */
 .left-edge-cell__text {
   padding-left: 13px;
@@ -125,4 +156,8 @@ h1 {
 
 .icon-sort.ascending {
   transform: rotate(90deg);
+}
+
+.invisible {
+  visibility: hidden;
 }
