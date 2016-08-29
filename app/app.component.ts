@@ -191,10 +191,13 @@ export class OrderByAndSlicePipe implements PipeTransform {
               class="row">
 
             <td class="col-md-5">
-              <span *ngIf="person !== selectedPerson" class="left-edge-cell__text">{{person.name}}</span>
+              <span *ngIf="person !== selectedPerson" class="left-edge-cell__text">
+                    {{person.name}}
+              </span>
               <span *ngIf="person === selectedPerson">
                 <label class="sr-only" for="selectedPersonName">Name</label>
-                <input type="text" class="form-control input-lg cell__input" id="selectedPersonName"
+                <input type="text" class="form-control input-lg cell__input"
+                       id="selectedPersonName"
                        [(ngModel)]="person.name" placeholder="Name">
               </span>
             </td>
@@ -236,7 +239,9 @@ export class OrderByAndSlicePipe implements PipeTransform {
               <button type="button" class="btn btn-link pull-right"
                       aria-label="Left Align"
                       (click)="deletePerson(person)">
-                <span class="glyphicon glyphicon-remove icon-remove" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-remove icon-remove"
+                      aria-hidden="true">
+                </span>
               </button>
             </td>
           </tr>
