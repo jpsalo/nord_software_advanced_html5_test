@@ -7,6 +7,19 @@ h1 {
   font-size: 250%;
 }
 
+.form-control::-webkit-input-placeholder {
+   color: rgb(120, 120, 120);
+}
+.form-control:-moz-placeholder { /* Firefox 18- */
+   color: rgb(120, 120, 120);
+}
+.form-control::-moz-placeholder {  /* Firefox 19+ */
+   color: rgb(120, 120, 120);
+}
+.form-control:-ms-input-placeholder {
+   color: rgb(120, 120, 120);
+}
+
 /* OVERWRITES */
 @media (min-width: 1200px) {
   .container{
