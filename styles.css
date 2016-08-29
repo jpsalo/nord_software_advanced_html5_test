@@ -127,7 +127,7 @@ h1 {
   background-color: inherit;
   /* http://stackoverflow.com/a/30202822 */
   border: 0;
-  outline: 1px solid #CCC;
+  /*outline: 1px solid #CCC;*/
   margin-left: 1px;
 }
 
@@ -160,4 +160,37 @@ h1 {
 
 .invisible {
   visibility: hidden;
+}
+
+/* Disable all interaction */
+.section__persons-list .person-row.inactive .form-control {
+  pointer-events: none;
+}
+
+.section__persons-list .form-control {
+  box-shadow: none;
+  outline: none;
+}
+
+.section__persons-list .person-row .form-control.active,
+.section__persons-list .person-row .form-control:focus,
+.section__persons-list .person-row .form-control:hover {
+  outline: 1px solid #CCC;
+}
+
+.section__persons-list .form-control:focus {
+  outline-offset: 0;
+}
+
+.section__persons-list select.form-control {
+  -webkit-appearance: none;
+  padding: 0;
+  margin-left: 8px;
+}
+
+.section__persons-list select.form-control.active,
+.section__persons-list select.form-control:focus,
+.section__persons-list select.form-control:hover {
+  -webkit-appearance: menulist;
+  margin-left: 0;
 }

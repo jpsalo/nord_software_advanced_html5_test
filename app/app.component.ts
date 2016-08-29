@@ -188,26 +188,25 @@ export class OrderByAndSlicePipe implements PipeTransform {
         <tbody>
           <tr *ngFor="let person of
               (persons | orderByAndSlice:orderByValue:orderByAscending:currentPage);trackBy:person?.id"
-              class="row">
+              class="row person-row"
+              [class.inactive]="selectedPerson && person !== selectedPerson">
 
             <td class="col-md-5">
-              <span *ngIf="person !== selectedPerson" class="left-edge-cell__text">
-                    {{person.name}}
-              </span>
-              <span *ngIf="person === selectedPerson">
+              <span>
                 <label class="sr-only" for="selectedPersonName">Name</label>
                 <input type="text" class="form-control input-lg cell__input"
+                       [class.active]="person === selectedPerson"
                        id="selectedPersonName"
                        [(ngModel)]="person.name" placeholder="Name">
               </span>
             </td>
 
             <td class="col-md-3">
-              <div *ngIf="person !== selectedPerson">{{person.gender}}</div>
-              <div *ngIf="person === selectedPerson" class="cell__editable">
+              <div class="cell__editable">
                 <label class="sr-only" for="selectedPersonGender">Gender</label>
                 <select id="selectedPersonGender" name="gender"
                         class="form-control input-lg"
+                        [class.active]="person === selectedPerson"
                         required [(ngModel)]="person.gender">
                   <option value="Female">Female</option>
                   <option value="Male">Male</option>
@@ -217,11 +216,11 @@ export class OrderByAndSlicePipe implements PipeTransform {
             </td>
 
             <td class="col-md-2">
-              <div *ngIf="person !== selectedPerson">{{person.age}}</div>
-              <div *ngIf="person === selectedPerson" class="cell__editable">
+              <div class="cell__editable">
                 <label class="sr-only" for="selectedPersonAge">Age</label>
                 <select id="selectedPersonAge" name="age"
                         class="form-control input-lg"
+                        [class.active]="person === selectedPerson"
                         required [(ngModel)]="person.age">
                   <option *ngFor="let age of ages" [value]="age">{{age}}</option>
                 </select>
@@ -275,6 +274,7 @@ export class OrderByAndSlicePipe implements PipeTransform {
 export class AppComponent {
   persons = PERSONS;
   selectedPerson: Person;
+  personFieldInEdit: boolean;
   toggleEditPersonDetails(person: Person): void {
     this.selectedPerson = (person === this.selectedPerson) ? undefined : person;
   };
