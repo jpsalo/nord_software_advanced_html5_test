@@ -1,4 +1,7 @@
-import { Component, Pipe, PipeTransform } from '@angular/core';
+import { Component } from '@angular/core';
+
+// http://stackoverflow.com/a/39007605
+import { OrderByAndSlicePipe } from './orderby-slice.pipe'
 
 import { Person } from './person';
 import { PersonService } from './person.service';
@@ -39,50 +42,11 @@ function generateAges(): number[] {
 
 const AGES: number[] = generateAges();
 
-@Pipe({ name: 'orderByAndSlice' })
-export class OrderByAndSlicePipe implements PipeTransform {
-  transform(persons: Person[],
-            value: string,
-            ascending: boolean,
-            page: number): Person[] {
-    let resultArray: Person[];
-
-    function parseValue(value) {
-      return typeof value === 'string' ? value.toLowerCase() : value;
-    }
-
-    if (value) {
-      if (ascending) {
-        resultArray = persons.sort(function(a, b) {
-          if (parseValue(a[value]) < parseValue(b[value])) return -1;
-          if (parseValue(a[value]) > parseValue(b[value])) return 1;
-          return 0;
-        });
-      } else {
-        resultArray = persons.sort(function(a, b) {
-          if (parseValue(a[value]) > parseValue(b[value])) return -1;
-          if (parseValue(a[value]) < parseValue(b[value])) return 1;
-          return 0;
-        });
-      }
-    } else {
-      resultArray = persons;
-    }
-
-    // Then show only a subset of the persons.
-    let end = page * VISIBLE_ITEMS_IN_PAGE;
-    let last = persons.length < end ? persons.length : end;
-    let first = end - VISIBLE_ITEMS_IN_PAGE;
-
-    return resultArray.slice(first, last);
-  }
-}
-
 @Component({
   selector: 'my-app',
-  pipes: [OrderByAndSlicePipe], // http://stackoverflow.com/a/39007605
   templateUrl: 'app/app.component.html',
-  providers: [PersonService]
+  providers: [PersonService],
+  pipes: [OrderByAndSlicePipe]
 })
 
 export class AppComponent {
@@ -91,6 +55,7 @@ export class AppComponent {
   ages = AGES;
   selectedPerson: Person;
   personFieldInEdit: boolean;
+  visibleItemsInPage = VISIBLE_ITEMS_IN_PAGE;
 
   constructor(private personService: PersonService) { }
 

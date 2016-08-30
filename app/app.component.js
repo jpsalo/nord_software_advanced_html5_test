@@ -9,6 +9,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+// http://stackoverflow.com/a/39007605
+var orderby_slice_pipe_1 = require('./orderby-slice.pipe');
 var person_1 = require('./person');
 var person_service_1 = require('./person.service');
 var modalConfirmCallback;
@@ -41,55 +43,12 @@ function generateAges() {
     return ages;
 }
 var AGES = generateAges();
-var OrderByAndSlicePipe = (function () {
-    function OrderByAndSlicePipe() {
-    }
-    OrderByAndSlicePipe.prototype.transform = function (persons, value, ascending, page) {
-        var resultArray;
-        function parseValue(value) {
-            return typeof value === 'string' ? value.toLowerCase() : value;
-        }
-        if (value) {
-            if (ascending) {
-                resultArray = persons.sort(function (a, b) {
-                    if (parseValue(a[value]) < parseValue(b[value]))
-                        return -1;
-                    if (parseValue(a[value]) > parseValue(b[value]))
-                        return 1;
-                    return 0;
-                });
-            }
-            else {
-                resultArray = persons.sort(function (a, b) {
-                    if (parseValue(a[value]) > parseValue(b[value]))
-                        return -1;
-                    if (parseValue(a[value]) < parseValue(b[value]))
-                        return 1;
-                    return 0;
-                });
-            }
-        }
-        else {
-            resultArray = persons;
-        }
-        // Then show only a subset of the persons.
-        var end = page * VISIBLE_ITEMS_IN_PAGE;
-        var last = persons.length < end ? persons.length : end;
-        var first = end - VISIBLE_ITEMS_IN_PAGE;
-        return resultArray.slice(first, last);
-    };
-    OrderByAndSlicePipe = __decorate([
-        core_1.Pipe({ name: 'orderByAndSlice' }), 
-        __metadata('design:paramtypes', [])
-    ], OrderByAndSlicePipe);
-    return OrderByAndSlicePipe;
-}());
-exports.OrderByAndSlicePipe = OrderByAndSlicePipe;
 var AppComponent = (function () {
     function AppComponent(personService) {
         this.personService = personService;
         this.model = new person_1.Person("", "", "", null);
         this.ages = AGES;
+        this.visibleItemsInPage = VISIBLE_ITEMS_IN_PAGE;
         this.currentPage = 1;
     }
     AppComponent.prototype.getPersons = function () {
@@ -180,9 +139,9 @@ var AppComponent = (function () {
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',
-            pipes: [OrderByAndSlicePipe],
             templateUrl: 'app/app.component.html',
-            providers: [person_service_1.PersonService]
+            providers: [person_service_1.PersonService],
+            pipes: [orderby_slice_pipe_1.OrderByAndSlicePipe]
         }), 
         __metadata('design:paramtypes', [person_service_1.PersonService])
     ], AppComponent);
