@@ -23,7 +23,7 @@ var Person = (function () {
 exports.Person = Person;
 var GENDER = ['Male', 'Female', 'Other'];
 function generatePerson() {
-    var gender = GENDER[ch.integer({ min: 0, max: 2 })];
+    var gender = GENDER[ch.integer({ min: 0, max: GENDER.length - 1 })];
     // let gender = ch.gender(); NOTE: This is not working.
     var name;
     if (gender !== 'Other') {
@@ -33,15 +33,18 @@ function generatePerson() {
         name = ch.name();
     }
     var person = {
-        id: ch.string({ length: 10, alpha: true }),
+        id: generateId(),
         name: name,
         gender: gender,
         age: ch.age()
     };
     return new Person(person.id, person.name, person.gender, person.age);
 }
+function generateId() {
+    return ch.string({ length: 10, alpha: true });
+}
 function generatePaginationPages(dataArray) {
-    var numberOfPages = Math.ceil(dataArray.length / 20);
+    var numberOfPages = Math.ceil(dataArray.length / VISIBLE_ITEMS_IN_PAGE);
     var paginationPages = [];
     for (var i = 0; i < numberOfPages; i++) {
         paginationPages.push(i + 1);
@@ -50,13 +53,16 @@ function generatePaginationPages(dataArray) {
 }
 var NUMBER_OF_INITIAL_PERSONS = 100;
 var VISIBLE_PAGINATION_LINKS = 4;
+var VISIBLE_ITEMS_IN_PAGE = 20;
+var MIN_AGE = 1;
+var MAX_AGE = 120;
 var PERSONS = [];
 for (var i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
     PERSONS.push(generatePerson());
 }
 function generateAges() {
     var ages = [];
-    for (var i = 1; i <= 120; i++) {
+    for (var i = MIN_AGE; i <= MAX_AGE; i++) {
         ages.push(i);
     }
     return ages;
@@ -93,9 +99,9 @@ var OrderByAndSlicePipe = (function () {
         else {
             resultArray = persons;
         }
-        var end = page * 20;
+        var end = page * VISIBLE_ITEMS_IN_PAGE;
         var last = persons.length < end ? persons.length : end;
-        var first = end - 20;
+        var first = end - VISIBLE_ITEMS_IN_PAGE;
         return resultArray.slice(first, last);
     };
     OrderByAndSlicePipe = __decorate([
@@ -136,7 +142,7 @@ var AppComponent = (function () {
     };
     ;
     AppComponent.prototype.addNewPerson = function () {
-        this.model.id = ch.string({ length: 10, alpha: true });
+        this.model.id = generateId();
         // http://stackoverflow.com/a/34497504
         // this.persons.unshift(this.model);
         // By using the 'natural' order, we get new person to appear on top of the list.

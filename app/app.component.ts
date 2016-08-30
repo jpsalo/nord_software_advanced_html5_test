@@ -15,7 +15,7 @@ export class Person {
 const GENDER: string[] = ['Male', 'Female', 'Other'];
 
 function generatePerson(): Person {
-  let gender = GENDER[ch.integer({min: 0, max: 2})];
+  let gender = GENDER[ch.integer({min: 0, max: GENDER.length - 1})];
   // let gender = ch.gender(); NOTE: This is not working.
   let name: string;
   if (gender !== 'Other') {
@@ -24,7 +24,7 @@ function generatePerson(): Person {
     name = ch.name();
   }
   let person = {
-    id: ch.string({length: 10, alpha: true}),
+    id: generateId(),
     name: name,
     gender: gender,
     age: ch.age()
@@ -32,8 +32,12 @@ function generatePerson(): Person {
   return new Person(person.id, person.name, person.gender, person.age);
 }
 
+function generateId(): string {
+  return ch.string({length: 10, alpha: true});
+}
+
 function generatePaginationPages(dataArray): number[] {
-  let numberOfPages = Math.ceil(dataArray.length / 20);
+  let numberOfPages = Math.ceil(dataArray.length / VISIBLE_ITEMS_IN_PAGE);
   let paginationPages = [];
   for (let i = 0; i < numberOfPages; i++) {
     paginationPages.push(i + 1);
@@ -43,6 +47,9 @@ function generatePaginationPages(dataArray): number[] {
 
 const NUMBER_OF_INITIAL_PERSONS: number = 100;
 const VISIBLE_PAGINATION_LINKS: number = 4;
+const VISIBLE_ITEMS_IN_PAGE: number = 20;
+const MIN_AGE: number = 1;
+const MAX_AGE: number = 120;
 
 const PERSONS: Person[] = [];
 for (let i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
@@ -51,7 +58,7 @@ for (let i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
 
 function generateAges(): number[] {
   let ages = [];
-  for (let i = 1; i <= 120; i++) {
+  for (let i = MIN_AGE; i <= MAX_AGE; i++) {
      ages.push(i);
   }
   return ages;
@@ -85,9 +92,9 @@ export class OrderByAndSlicePipe implements PipeTransform {
     } else {
       resultArray = persons;
     }
-    let end = page * 20;
+    let end = page * VISIBLE_ITEMS_IN_PAGE;
     let last = persons.length < end ? persons.length : end;
-    let first = end - 20;
+    let first = end - VISIBLE_ITEMS_IN_PAGE;
 
     return resultArray.slice(first, last);
   }
@@ -122,7 +129,7 @@ export class AppComponent {
     this.selectedPerson = undefined;
   };
   addNewPerson(): void {
-    this.model.id = ch.string({length: 10, alpha: true});
+    this.model.id = generateId();
     // http://stackoverflow.com/a/34497504
     // this.persons.unshift(this.model);
     // By using the 'natural' order, we get new person to appear on top of the list.
