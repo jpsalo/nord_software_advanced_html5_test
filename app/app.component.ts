@@ -3,9 +3,6 @@ import { Component, Pipe, PipeTransform } from '@angular/core';
 import { Person } from './person';
 import { PersonService } from './person.service';
 
-import * as chance from 'chance';
-var randomGenerator = new chance();
-
 let modalConfirmCallback: any;
 function registerModalConfirmCallback(data) {
   modalConfirmCallback = data;
@@ -16,10 +13,6 @@ function executeModalConfirmCallback() {
     modalConfirmCallback.callback(modalConfirmCallback.params);
     modalConfirmCallback = undefined;
   }
-}
-
-function generateId(): string {
-  return randomGenerator.string({length: 10, alpha: true});
 }
 
 function generatePaginationPages(dataArray): number[] {
@@ -113,18 +106,18 @@ export class AppComponent {
   toggleEditPersonDetails(person: Person): void {
     if (person === this.selectedPerson) this.endEditPersonDetails(person);
     else this.editPersonDetails(person);
-  };
+  }
+
   editPersonDetails(person: Person): void {
     this.selectedPerson = person;
-  };
+  }
+
   endEditPersonDetails(person: Person): void {
     this.selectedPerson = undefined;
-  };
+  }
 
   addNewPerson(): void {
-    console.log(this.persons.length);
     this.persons = this.personService.addNewPerson(this.model, this.persons);
-    // this.persons = this.persons.slice();
     // By using the 'natural' order, we get new person to appear on top of the list.
     this.orderByValue = '';
     this.gotoPage(1);
@@ -152,13 +145,15 @@ export class AppComponent {
     if (this.currentPage !== 1) this.gotoPage(1);
     this.orderByValue = value;
     this.orderByAscending = !this.orderByAscending;
-  };
+  }
+
   // http://stackoverflow.com/a/34409303
   pages: number[];
   currentPage = 1;
   gotoPage(pageNumber: number): void {
     this.currentPage = pageNumber;
-  };
+  }
+
   isPaginationArrowVisible(direction: string): boolean {
     let isVisible = false;
     if (direction === 'previous' && this.currentPage !== this.pages[0]) {
@@ -169,30 +164,37 @@ export class AppComponent {
       isVisible = true;
     }
     return isVisible;
-  };
+  }
+
   gotoPreviousPage(): void {
     if (this.currentPage !== this.pages[0]) this.gotoPage(this.currentPage - 1);
-  };
+  }
+
   gotoNextPage(): void {
     if (this.currentPage !== this.pages[this.pages.length - 1])
       this.gotoPage(this.currentPage + 1);
-  };
+  }
+
   isEmpty(str: string): boolean {
     return (!str || 0 === str.length);
-  };
+  }
+
   onKey(event: any, person: Person): void {
     if ((event.keyCode == 13 || event.keyCode == 27) &&
       !this.isEmpty(person.name)) {
       event.target.blur();
       this.endEditPersonDetails(person);
     }
-  };
+  }
+
   modalVisible: boolean;
   openModal(): void {
     this.modalVisible = true;
-  };
+  }
+
   closeModal(confirmDelete: boolean): void {
     this.modalVisible = false;
     if (confirmDelete) executeModalConfirmCallback();
-  };
+  }
+
 }

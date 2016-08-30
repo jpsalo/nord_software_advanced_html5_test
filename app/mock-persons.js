@@ -30,7 +30,4 @@ for (var i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
     PERS.push(generatePerson());
 }
 exports.PERSONS = PERS;
-// export const PERSONS: Person[] = [
-//   new Person("asd", "foo", "bar", 123)
-// ];
 //# sourceMappingURL=mock-persons.js.map

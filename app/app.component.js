@@ -11,8 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var person_1 = require('./person');
 var person_service_1 = require('./person.service');
-var chance = require('chance');
-var randomGenerator = new chance();
 var modalConfirmCallback;
 function registerModalConfirmCallback(data) {
     modalConfirmCallback = data;
@@ -22,9 +20,6 @@ function executeModalConfirmCallback() {
         modalConfirmCallback.callback(modalConfirmCallback.params);
         modalConfirmCallback = undefined;
     }
-}
-function generateId() {
-    return randomGenerator.string({ length: 10, alpha: true });
 }
 function generatePaginationPages(dataArray) {
     var numberOfPages = Math.ceil(dataArray.length / VISIBLE_ITEMS_IN_PAGE);
@@ -110,19 +105,14 @@ var AppComponent = (function () {
         else
             this.editPersonDetails(person);
     };
-    ;
     AppComponent.prototype.editPersonDetails = function (person) {
         this.selectedPerson = person;
     };
-    ;
     AppComponent.prototype.endEditPersonDetails = function (person) {
         this.selectedPerson = undefined;
     };
-    ;
     AppComponent.prototype.addNewPerson = function () {
-        console.log(this.persons.length);
         this.persons = this.personService.addNewPerson(this.model, this.persons);
-        // this.persons = this.persons.slice();
         // By using the 'natural' order, we get new person to appear on top of the list.
         this.orderByValue = '';
         this.gotoPage(1);
@@ -147,11 +137,9 @@ var AppComponent = (function () {
         this.orderByValue = value;
         this.orderByAscending = !this.orderByAscending;
     };
-    ;
     AppComponent.prototype.gotoPage = function (pageNumber) {
         this.currentPage = pageNumber;
     };
-    ;
     AppComponent.prototype.isPaginationArrowVisible = function (direction) {
         var isVisible = false;
         if (direction === 'previous' && this.currentPage !== this.pages[0]) {
@@ -163,21 +151,17 @@ var AppComponent = (function () {
         }
         return isVisible;
     };
-    ;
     AppComponent.prototype.gotoPreviousPage = function () {
         if (this.currentPage !== this.pages[0])
             this.gotoPage(this.currentPage - 1);
     };
-    ;
     AppComponent.prototype.gotoNextPage = function () {
         if (this.currentPage !== this.pages[this.pages.length - 1])
             this.gotoPage(this.currentPage + 1);
     };
-    ;
     AppComponent.prototype.isEmpty = function (str) {
         return (!str || 0 === str.length);
     };
-    ;
     AppComponent.prototype.onKey = function (event, person) {
         if ((event.keyCode == 13 || event.keyCode == 27) &&
             !this.isEmpty(person.name)) {
@@ -185,17 +169,14 @@ var AppComponent = (function () {
             this.endEditPersonDetails(person);
         }
     };
-    ;
     AppComponent.prototype.openModal = function () {
         this.modalVisible = true;
     };
-    ;
     AppComponent.prototype.closeModal = function (confirmDelete) {
         this.modalVisible = false;
         if (confirmDelete)
             executeModalConfirmCallback();
     };
-    ;
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',

@@ -34,7 +34,3 @@ for (let i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
 }
 
 export const PERSONS: Person[] = PERS;
-
-// export const PERSONS: Person[] = [
-//   new Person("asd", "foo", "bar", 123)
-// ];
