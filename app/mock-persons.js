@@ -25,9 +25,12 @@ function generatePerson() {
     };
     return new person_1.Person(person.id, person.name, person.gender, person.age);
 }
-var PERS = [];
-for (var i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
-    PERS.push(generatePerson());
+function generatePersons() {
+    var persons = [];
+    for (var i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
+        persons.push(generatePerson());
+    }
+    return persons;
 }
-exports.PERSONS = PERS;
+exports.PERSONS = generatePersons();
 //# sourceMappingURL=mock-persons.js.map

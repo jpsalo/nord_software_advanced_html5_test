@@ -28,9 +28,12 @@ function generatePerson(): Person {
   return new Person(person.id, person.name, person.gender, person.age);
 }
 
-const PERS: Person[] = [];
-for (let i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
-  PERS.push(generatePerson());
+function generatePersons() {
+  let persons = [];
+  for (let i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
+    persons.push(generatePerson());
+  }
+  return persons;
 }
 
-export const PERSONS: Person[] = PERS;
+export const PERSONS: Person[] = generatePersons();
