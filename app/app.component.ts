@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 // http://stackoverflow.com/a/39007605
-import { OrderByAndSlicePipe } from './orderby-slice.pipe'
+import { OrderByAndSlicePipe } from './orderby-slice.pipe';
 
 import { Person } from './person';
 import { PersonService } from './person.service';
@@ -25,6 +25,10 @@ function generatePaginationPages(dataArray): number[] {
     paginationPages.push(i + 1);
   }
   return paginationPages;
+}
+
+function isEmpty(str: string): boolean {
+  return (!str || 0 === str.length);
 }
 
 const VISIBLE_PAGINATION_LINKS: number = 4;
@@ -140,13 +144,8 @@ export class AppComponent {
       this.gotoPage(this.currentPage + 1);
   }
 
-  isEmpty(str: string): boolean {
-    return (!str || 0 === str.length);
-  }
-
   onKey(event: any, person: Person): void {
-    if ((event.keyCode == 13 || event.keyCode == 27) &&
-      !this.isEmpty(person.name)) {
+    if ((event.keyCode == 13 || event.keyCode == 27) && !isEmpty(person.name)) {
       event.target.blur();
       this.endEditPersonDetails(person);
     }

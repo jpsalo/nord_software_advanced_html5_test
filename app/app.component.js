@@ -31,6 +31,9 @@ function generatePaginationPages(dataArray) {
     }
     return paginationPages;
 }
+function isEmpty(str) {
+    return (!str || 0 === str.length);
+}
 var VISIBLE_PAGINATION_LINKS = 4;
 var VISIBLE_ITEMS_IN_PAGE = 20;
 var MIN_AGE = 1;
@@ -118,12 +121,8 @@ var AppComponent = (function () {
         if (this.currentPage !== this.pages[this.pages.length - 1])
             this.gotoPage(this.currentPage + 1);
     };
-    AppComponent.prototype.isEmpty = function (str) {
-        return (!str || 0 === str.length);
-    };
     AppComponent.prototype.onKey = function (event, person) {
-        if ((event.keyCode == 13 || event.keyCode == 27) &&
-            !this.isEmpty(person.name)) {
+        if ((event.keyCode == 13 || event.keyCode == 27) && !isEmpty(person.name)) {
             event.target.blur();
             this.endEditPersonDetails(person);
         }
