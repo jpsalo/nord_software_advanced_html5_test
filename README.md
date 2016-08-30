@@ -2,7 +2,9 @@
 
 ## Install packages
 
-Run in the project root directory:
+1. Make sure you are using at least node v4.x.x and npm 3.x.x.
+
+2. Run in the project root directory:
 
 `npm install`
 
