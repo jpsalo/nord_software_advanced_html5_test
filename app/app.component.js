@@ -62,14 +62,14 @@ var AppComponent = (function () {
     };
     AppComponent.prototype.toggleEditPersonDetails = function (person) {
         if (person === this.selectedPerson)
-            this.endEditPersonDetails(person);
+            this.endEditPersonDetails();
         else
             this.editPersonDetails(person);
     };
     AppComponent.prototype.editPersonDetails = function (person) {
         this.selectedPerson = person;
     };
-    AppComponent.prototype.endEditPersonDetails = function (person) {
+    AppComponent.prototype.endEditPersonDetails = function () {
         this.selectedPerson = undefined;
     };
     AppComponent.prototype.addNewPerson = function () {
@@ -123,7 +123,7 @@ var AppComponent = (function () {
     AppComponent.prototype.onKey = function (event, person) {
         if ((event.keyCode == 13 || event.keyCode == 27) && !isEmpty(person.name)) {
             event.target.blur();
-            this.endEditPersonDetails(person);
+            this.endEditPersonDetails();
         }
     };
     AppComponent.prototype.openModal = function () {

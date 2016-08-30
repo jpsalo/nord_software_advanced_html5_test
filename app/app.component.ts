@@ -73,7 +73,7 @@ export class AppComponent {
   }
 
   toggleEditPersonDetails(person: Person): void {
-    if (person === this.selectedPerson) this.endEditPersonDetails(person);
+    if (person === this.selectedPerson) this.endEditPersonDetails();
     else this.editPersonDetails(person);
   }
 
@@ -81,7 +81,7 @@ export class AppComponent {
     this.selectedPerson = person;
   }
 
-  endEditPersonDetails(person: Person): void {
+  endEditPersonDetails(): void {
     this.selectedPerson = undefined;
   }
 
@@ -147,7 +147,7 @@ export class AppComponent {
   onKey(event: any, person: Person): void {
     if ((event.keyCode == 13 || event.keyCode == 27) && !isEmpty(person.name)) {
       event.target.blur();
-      this.endEditPersonDetails(person);
+      this.endEditPersonDetails();
     }
   }
 
