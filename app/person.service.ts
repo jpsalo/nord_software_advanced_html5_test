@@ -16,8 +16,14 @@ export class PersonService {
     return PERSONS;
   }
 
-  addNewPerson(personData: any): void {
+  addNewPerson(personData: any, persons: Person[]): Person[] {
     personData.id = generateId();
-    PERSONS.unshift(personData);
+    persons.unshift(personData);
+    return persons.slice();
+  }
+
+  deletePerson(person: Person, persons: Person[]): Person[] {
+    persons.splice(persons.indexOf(person), 1);
+    return persons.slice();
   }
 }

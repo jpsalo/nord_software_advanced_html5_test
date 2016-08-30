@@ -21,9 +21,14 @@ var PersonService = (function () {
     PersonService.prototype.getPersons = function () {
         return mock_persons_1.PERSONS;
     };
-    PersonService.prototype.addNewPerson = function (personData) {
+    PersonService.prototype.addNewPerson = function (personData, persons) {
         personData.id = generateId();
-        mock_persons_1.PERSONS.unshift(personData);
+        persons.unshift(personData);
+        return persons.slice();
+    };
+    PersonService.prototype.deletePerson = function (person, persons) {
+        persons.splice(persons.indexOf(person), 1);
+        return persons.slice();
     };
     PersonService = __decorate([
         core_1.Injectable(), 

@@ -13,6 +13,16 @@ var person_1 = require('./person');
 var person_service_1 = require('./person.service');
 var chance = require('chance');
 var randomGenerator = new chance();
+var modalConfirmCallback;
+function registerModalConfirmCallback(data) {
+    modalConfirmCallback = data;
+}
+function executeModalConfirmCallback() {
+    if (modalConfirmCallback) {
+        modalConfirmCallback.callback(modalConfirmCallback.params);
+        modalConfirmCallback = undefined;
+    }
+}
 function generateId() {
     return randomGenerator.string({ length: 10, alpha: true });
 }
@@ -94,12 +104,6 @@ var AppComponent = (function () {
         this.getPersons();
         this.pages = generatePaginationPages(this.persons);
     };
-    AppComponent.prototype.doDeletePerson = function () {
-        this.persons.splice(this.persons.indexOf(this.personToDelete), 1);
-        this.persons = this.persons.concat();
-        this.pages = generatePaginationPages(this.persons);
-    };
-    ;
     AppComponent.prototype.toggleEditPersonDetails = function (person) {
         if (person === this.selectedPerson)
             this.endEditPersonDetails(person);
@@ -116,19 +120,27 @@ var AppComponent = (function () {
     };
     ;
     AppComponent.prototype.addNewPerson = function () {
-        this.personService.addNewPerson(this.model);
+        console.log(this.persons.length);
+        this.persons = this.personService.addNewPerson(this.model, this.persons);
+        // this.persons = this.persons.slice();
         // By using the 'natural' order, we get new person to appear on top of the list.
         this.orderByValue = '';
         this.gotoPage(1);
         this.model = new person_1.Person(null, null, "", null);
         this.pages = generatePaginationPages(this.persons);
     };
-    ;
     AppComponent.prototype.deletePerson = function (person) {
+        var data = {
+            callback: this.doDeletePerson.bind(this),
+            params: person
+        };
+        registerModalConfirmCallback(data);
         this.openModal();
-        this.personToDelete = person;
     };
-    ;
+    AppComponent.prototype.doDeletePerson = function (person) {
+        this.persons = this.personService.deletePerson(person, this.persons);
+        this.pages = generatePaginationPages(this.persons);
+    };
     AppComponent.prototype.sortBy = function (value) {
         if (this.currentPage !== 1)
             this.gotoPage(1);
@@ -180,9 +192,8 @@ var AppComponent = (function () {
     ;
     AppComponent.prototype.closeModal = function (confirmDelete) {
         this.modalVisible = false;
-        // TODO: Deleting is not supposed to be done here
         if (confirmDelete)
-            this.doDeletePerson();
+            executeModalConfirmCallback();
     };
     ;
     AppComponent = __decorate([

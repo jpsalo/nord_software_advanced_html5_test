@@ -6,6 +6,18 @@ import { PersonService } from './person.service';
 import * as chance from 'chance';
 var randomGenerator = new chance();
 
+let modalConfirmCallback: any;
+function registerModalConfirmCallback(data) {
+  modalConfirmCallback = data;
+}
+
+function executeModalConfirmCallback() {
+  if (modalConfirmCallback) {
+    modalConfirmCallback.callback(modalConfirmCallback.params);
+    modalConfirmCallback = undefined;
+  }
+}
+
 function generateId(): string {
   return randomGenerator.string({length: 10, alpha: true});
 }
@@ -86,7 +98,6 @@ export class AppComponent {
   ages = AGES;
   selectedPerson: Person;
   personFieldInEdit: boolean;
-  personToDelete: Person;
 
   constructor(private personService: PersonService) { }
 
@@ -99,11 +110,6 @@ export class AppComponent {
     this.pages = generatePaginationPages(this.persons);
   }
 
-  doDeletePerson(): void {
-    this.persons.splice(this.persons.indexOf(this.personToDelete), 1);
-    this.persons = this.persons.concat();
-    this.pages = generatePaginationPages(this.persons);
-  };
   toggleEditPersonDetails(person: Person): void {
     if (person === this.selectedPerson) this.endEditPersonDetails(person);
     else this.editPersonDetails(person);
@@ -114,18 +120,32 @@ export class AppComponent {
   endEditPersonDetails(person: Person): void {
     this.selectedPerson = undefined;
   };
+
   addNewPerson(): void {
-    this.personService.addNewPerson(this.model);
+    console.log(this.persons.length);
+    this.persons = this.personService.addNewPerson(this.model, this.persons);
+    // this.persons = this.persons.slice();
     // By using the 'natural' order, we get new person to appear on top of the list.
     this.orderByValue = '';
     this.gotoPage(1);
     this.model = new Person(null, null, "", null);
     this.pages = generatePaginationPages(this.persons);
-  };
+  }
+
   deletePerson(person: Person): void {
+    let data = {
+      callback: this.doDeletePerson.bind(this),
+      params: person
+    };
+    registerModalConfirmCallback(data);
     this.openModal();
-    this.personToDelete = person;
-  };
+  }
+
+  doDeletePerson(person: Person): void {
+    this.persons = this.personService.deletePerson(person, this.persons);
+    this.pages = generatePaginationPages(this.persons);
+  }
+
   orderByValue: string;
   orderByAscending: boolean;
   sortBy(value: string): void {
@@ -173,7 +193,6 @@ export class AppComponent {
   };
   closeModal(confirmDelete: boolean): void {
     this.modalVisible = false;
-    // TODO: Deleting is not supposed to be done here
-    if (confirmDelete) this.doDeletePerson();
+    if (confirmDelete) executeModalConfirmCallback();
   };
 }

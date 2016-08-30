@@ -93,7 +93,7 @@
 
       <tbody>
         <tr *ngFor="let person of
-            (persons | orderByAndSlice:orderByValue:orderByAscending:currentPage);trackBy:person?.id"
+            (persons | orderByAndSlice:orderByValue:orderByAscending:currentPage)"
             class="row person-row"
             [class.inactive]="selectedPerson && person !== selectedPerson">
 
