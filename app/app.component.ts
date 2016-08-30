@@ -68,7 +68,10 @@ const AGES: number[] = generateAges();
 
 @Pipe({ name: 'orderByAndSlice' })
 export class OrderByAndSlicePipe implements PipeTransform {
-  transform(persons: Person[], value: string, ascending: boolean, page: number) {
+  transform(persons: Person[],
+            value: string,
+            ascending: boolean,
+            page: number): Person[] {
     let resultArray: Person[];
 
     function parseValue(value) {
