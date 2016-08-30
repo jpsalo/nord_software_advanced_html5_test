@@ -12,9 +12,9 @@ export class Person {
   ) { }
 }
 
-const GENDER = ['Male', 'Female', 'Other'];
+const GENDER: string[] = ['Male', 'Female', 'Other'];
 
-function generatePerson() {
+function generatePerson(): Person {
   let gender = GENDER[ch.integer({min: 0, max: 2})];
   // let gender = ch.gender(); NOTE: This is not working.
   let name: string;
@@ -32,7 +32,7 @@ function generatePerson() {
   return new Person(person.id, person.name, person.gender, person.age);
 }
 
-function generatePaginationPages(dataArray) {
+function generatePaginationPages(dataArray): number[] {
   let numberOfPages = Math.ceil(dataArray.length / 20);
   let paginationPages = [];
   for (let i = 0; i < numberOfPages; i++) {
@@ -49,7 +49,7 @@ for (let i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
   PERSONS.push(generatePerson());
 }
 
-function generateAges() {
+function generateAges(): number[] {
   let ages = [];
   for (let i = 1; i <= 120; i++) {
      ages.push(i);
@@ -57,12 +57,12 @@ function generateAges() {
   return ages;
 }
 
-const AGES = generateAges();
+const AGES: number[] = generateAges();
 
 @Pipe({ name: 'orderByAndSlice' })
 export class OrderByAndSlicePipe implements PipeTransform {
   transform(persons: Person[], value: string, ascending: boolean, page: number) {
-    let resultArray;
+    let resultArray: Person[];
 
     function parseValue(value) {
       return typeof value === 'string' ? value.toLowerCase() : value;
@@ -106,7 +106,7 @@ export class AppComponent {
   selectedPerson: Person;
   personFieldInEdit: boolean;
   personToDelete: Person;
-  doDeletePerson() {
+  doDeletePerson(): void {
     this.persons.splice(this.persons.indexOf(this.personToDelete), 1);
     this.persons = this.persons.concat();
     this.pages = generatePaginationPages(this.persons);
@@ -115,13 +115,13 @@ export class AppComponent {
     if (person === this.selectedPerson) this.endEditPersonDetails(person);
     else this.editPersonDetails(person);
   };
-  editPersonDetails(person: Person) {
+  editPersonDetails(person: Person): void {
     this.selectedPerson = person;
   };
   endEditPersonDetails(person: Person): void {
     this.selectedPerson = undefined;
   };
-  addNewPerson() {
+  addNewPerson(): void {
     this.model.id = ch.string({length: 10, alpha: true});
     // http://stackoverflow.com/a/34497504
     // this.persons.unshift(this.model);
@@ -132,24 +132,24 @@ export class AppComponent {
     this.model = new Person(null, null, "", null);
     this.pages = generatePaginationPages(this.persons);
   };
-  deletePerson(person) {
+  deletePerson(person: Person): void {
     this.openModal();
     this.personToDelete = person;
   };
   orderByValue: string;
   orderByAscending: boolean;
-  sortBy(value) {
+  sortBy(value: string): void {
     if (this.currentPage !== 1) this.gotoPage(1);
     this.orderByValue = value;
     this.orderByAscending = !this.orderByAscending;
   };
   // http://stackoverflow.com/a/34409303
   pages = generatePaginationPages(this.persons);
-  currentPage: number = 1;
-  gotoPage(pageNumber) {
+  currentPage = 1;
+  gotoPage(pageNumber: number): void {
     this.currentPage = pageNumber;
   };
-  isPaginationArrowVisible(direction) {
+  isPaginationArrowVisible(direction: string): boolean {
     let isVisible = false;
     if (direction === 'previous' && this.currentPage !== this.pages[0]) {
       isVisible = true;
@@ -160,17 +160,17 @@ export class AppComponent {
     }
     return isVisible;
   };
-  gotoPreviousPage() {
+  gotoPreviousPage(): void {
     if (this.currentPage !== this.pages[0]) this.gotoPage(this.currentPage - 1);
   };
-  gotoNextPage() {
+  gotoNextPage(): void {
     if (this.currentPage !== this.pages[this.pages.length - 1])
       this.gotoPage(this.currentPage + 1);
   };
-  isEmpty(str) {
+  isEmpty(str: string): boolean {
     return (!str || 0 === str.length);
   };
-  onKey(event: any, person: Person) {
+  onKey(event: any, person: Person): void {
     if ((event.keyCode == 13 || event.keyCode == 27) &&
       !this.isEmpty(person.name)) {
       event.target.blur();
@@ -178,10 +178,10 @@ export class AppComponent {
     }
   };
   modalVisible: boolean;
-  openModal() {
+  openModal(): void {
     this.modalVisible = true;
   };
-  closeModal(confirmDelete) {
+  closeModal(confirmDelete: boolean): void {
     this.modalVisible = false;
     if (confirmDelete) this.doDeletePerson();
   };
