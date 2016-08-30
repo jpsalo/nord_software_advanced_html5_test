@@ -49,7 +49,7 @@ var AGES = generateAges();
 var AppComponent = (function () {
     function AppComponent(personService) {
         this.personService = personService;
-        this.model = new person_1.Person("", "", "", null);
+        this.newPerson = new person_1.Person("", "", "", null);
         this.ages = AGES;
         this.visibleItemsInPage = VISIBLE_ITEMS_IN_PAGE;
         this.currentPage = 1;
@@ -74,11 +74,11 @@ var AppComponent = (function () {
         this.selectedPerson = undefined;
     };
     AppComponent.prototype.addNewPerson = function () {
-        this.persons = this.personService.addNewPerson(this.model, this.persons);
+        this.persons = this.personService.addNewPerson(this.newPerson, this.persons);
         // By using the 'natural' order, we get new person to appear on top of the list.
         this.orderByValue = '';
         this.gotoPage(1);
-        this.model = new person_1.Person(null, null, "", null);
+        this.newPerson = new person_1.Person(null, null, "", null);
         this.pages = generatePaginationPages(this.persons);
     };
     AppComponent.prototype.deletePerson = function (person) {

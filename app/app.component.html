@@ -18,13 +18,13 @@
         <label class="sr-only" for="personName">Name</label>
         <input type="text" name="name" id="personName"
                class="form-control full-width input-lg"
-               #newPerson placeholder="Name" required [(ngModel)]="model.name">
+               placeholder="Name" required [(ngModel)]="newPerson.name">
       </div>
       <div class="form-group col-sm-3">
         <label class="sr-only" for="personGender">Gender</label>
         <select id="personGender" name="gender"
                 class="form-control full-width input-lg" required
-                [(ngModel)]="model.gender">
+                [(ngModel)]="newPerson.gender">
           <option value="" disabled selected>Gender</option>
           <option value="Female">Female</option>
           <option value="Male">Male</option>
@@ -36,7 +36,7 @@
         <label class="sr-only" for="personAge">Age</label>
         <select id="personAge" name="age"
                 class="form-control full-width input-lg" required
-                [(ngModel)]="model.age">
+                [(ngModel)]="newPerson.age">
           <option value=null disabled selected>Age</option>
           <option *ngFor="let age of ages" [value]="age">{{age}}</option>
         </select>

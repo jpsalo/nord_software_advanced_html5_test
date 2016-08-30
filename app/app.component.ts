@@ -54,7 +54,7 @@ const AGES: number[] = generateAges();
 })
 
 export class AppComponent {
-  model = new Person("", "", "", null);
+  newPerson = new Person("", "", "", null);
   persons: Person[];
   ages = AGES;
   selectedPerson: Person;
@@ -86,11 +86,11 @@ export class AppComponent {
   }
 
   addNewPerson(): void {
-    this.persons = this.personService.addNewPerson(this.model, this.persons);
+    this.persons = this.personService.addNewPerson(this.newPerson, this.persons);
     // By using the 'natural' order, we get new person to appear on top of the list.
     this.orderByValue = '';
     this.gotoPage(1);
-    this.model = new Person(null, null, "", null);
+    this.newPerson = new Person(null, null, "", null);
     this.pages = generatePaginationPages(this.persons);
   }
 
