@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var chance = require('chance');
-var ch = new chance();
+var randomGenerator = new chance();
 var Person = (function () {
     function Person(id, name, gender, age) {
         this.id = id;
@@ -21,27 +21,27 @@ var Person = (function () {
     return Person;
 }());
 exports.Person = Person;
-var GENDER = ['Male', 'Female', 'Other'];
+var GENDERS = ['Male', 'Female', 'Other'];
 function generatePerson() {
-    var gender = GENDER[ch.integer({ min: 0, max: GENDER.length - 1 })];
-    // let gender = ch.gender(); NOTE: This is not working.
+    var gender = GENDERS[randomGenerator.integer({ min: 0, max: GENDERS.length - 1 })];
+    // let gender = randomGenerator.gender(); NOTE: This is not working.
     var name;
     if (gender !== 'Other') {
-        name = ch.first({ gender: gender }) + ' ' + ch.last();
+        name = randomGenerator.first({ gender: gender }) + ' ' + randomGenerator.last();
     }
     else {
-        name = ch.name();
+        name = randomGenerator.name();
     }
     var person = {
         id: generateId(),
         name: name,
         gender: gender,
-        age: ch.age()
+        age: randomGenerator.age()
     };
     return new Person(person.id, person.name, person.gender, person.age);
 }
 function generateId() {
-    return ch.string({ length: 10, alpha: true });
+    return randomGenerator.string({ length: 10, alpha: true });
 }
 function generatePaginationPages(dataArray) {
     var numberOfPages = Math.ceil(dataArray.length / VISIBLE_ITEMS_IN_PAGE);
@@ -99,6 +99,7 @@ var OrderByAndSlicePipe = (function () {
         else {
             resultArray = persons;
         }
+        // Then show only a subset of the persons.
         var end = page * VISIBLE_ITEMS_IN_PAGE;
         var last = persons.length < end ? persons.length : end;
         var first = end - VISIBLE_ITEMS_IN_PAGE;
@@ -209,6 +210,7 @@ var AppComponent = (function () {
     ;
     AppComponent.prototype.closeModal = function (confirmDelete) {
         this.modalVisible = false;
+        // TODO: Deleting is not supposed to be done here
         if (confirmDelete)
             this.doDeletePerson();
     };

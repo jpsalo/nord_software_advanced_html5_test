@@ -1,7 +1,7 @@
 import { Component, Pipe, PipeTransform } from '@angular/core';
 
 import * as chance from 'chance';
-var ch = new chance();
+var randomGenerator = new chance();
 
 export class Person {
   constructor(
@@ -12,28 +12,28 @@ export class Person {
   ) { }
 }
 
-const GENDER: string[] = ['Male', 'Female', 'Other'];
+const GENDERS: string[] = ['Male', 'Female', 'Other'];
 
 function generatePerson(): Person {
-  let gender = GENDER[ch.integer({min: 0, max: GENDER.length - 1})];
-  // let gender = ch.gender(); NOTE: This is not working.
+  let gender = GENDERS[randomGenerator.integer({min: 0, max: GENDERS.length - 1})];
+  // let gender = randomGenerator.gender(); NOTE: This is not working.
   let name: string;
   if (gender !== 'Other') {
-    name = ch.first({ gender: gender }) + ' ' + ch.last();
+    name = randomGenerator.first({ gender: gender }) + ' ' + randomGenerator.last();
   } else {
-    name = ch.name();
+    name = randomGenerator.name();
   }
   let person = {
     id: generateId(),
     name: name,
     gender: gender,
-    age: ch.age()
+    age: randomGenerator.age()
   };
   return new Person(person.id, person.name, person.gender, person.age);
 }
 
 function generateId(): string {
-  return ch.string({length: 10, alpha: true});
+  return randomGenerator.string({length: 10, alpha: true});
 }
 
 function generatePaginationPages(dataArray): number[] {
@@ -92,6 +92,8 @@ export class OrderByAndSlicePipe implements PipeTransform {
     } else {
       resultArray = persons;
     }
+
+    // Then show only a subset of the persons.
     let end = page * VISIBLE_ITEMS_IN_PAGE;
     let last = persons.length < end ? persons.length : end;
     let first = end - VISIBLE_ITEMS_IN_PAGE;
@@ -190,6 +192,7 @@ export class AppComponent {
   };
   closeModal(confirmDelete: boolean): void {
     this.modalVisible = false;
+    // TODO: Deleting is not supposed to be done here
     if (confirmDelete) this.doDeletePerson();
   };
 }
