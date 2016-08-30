@@ -9,37 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var person_1 = require('./person');
+var person_service_1 = require('./person.service');
 var chance = require('chance');
 var randomGenerator = new chance();
-var Person = (function () {
-    function Person(id, name, gender, age) {
-        this.id = id;
-        this.name = name;
-        this.gender = gender;
-        this.age = age;
-    }
-    return Person;
-}());
-exports.Person = Person;
-var GENDERS = ['Male', 'Female', 'Other'];
-function generatePerson() {
-    var gender = GENDERS[randomGenerator.integer({ min: 0, max: GENDERS.length - 1 })];
-    // let gender = randomGenerator.gender(); NOTE: This is not working.
-    var name;
-    if (gender !== 'Other') {
-        name = randomGenerator.first({ gender: gender }) + ' ' + randomGenerator.last();
-    }
-    else {
-        name = randomGenerator.name();
-    }
-    var person = {
-        id: generateId(),
-        name: name,
-        gender: gender,
-        age: randomGenerator.age()
-    };
-    return new Person(person.id, person.name, person.gender, person.age);
-}
 function generateId() {
     return randomGenerator.string({ length: 10, alpha: true });
 }
@@ -51,15 +24,10 @@ function generatePaginationPages(dataArray) {
     }
     return paginationPages;
 }
-var NUMBER_OF_INITIAL_PERSONS = 100;
 var VISIBLE_PAGINATION_LINKS = 4;
 var VISIBLE_ITEMS_IN_PAGE = 20;
 var MIN_AGE = 1;
 var MAX_AGE = 120;
-var PERSONS = [];
-for (var i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
-    PERSONS.push(generatePerson());
-}
 function generateAges() {
     var ages = [];
     for (var i = MIN_AGE; i <= MAX_AGE; i++) {
@@ -113,14 +81,19 @@ var OrderByAndSlicePipe = (function () {
 }());
 exports.OrderByAndSlicePipe = OrderByAndSlicePipe;
 var AppComponent = (function () {
-    function AppComponent() {
-        this.persons = PERSONS;
-        this.model = new Person("", "", "", null);
+    function AppComponent(personService) {
+        this.personService = personService;
+        this.model = new person_1.Person("", "", "", null);
         this.ages = AGES;
-        // http://stackoverflow.com/a/34409303
-        this.pages = generatePaginationPages(this.persons);
         this.currentPage = 1;
     }
+    AppComponent.prototype.getPersons = function () {
+        this.persons = this.personService.getPersons();
+    };
+    AppComponent.prototype.ngOnInit = function () {
+        this.getPersons();
+        this.pages = generatePaginationPages(this.persons);
+    };
     AppComponent.prototype.doDeletePerson = function () {
         this.persons.splice(this.persons.indexOf(this.personToDelete), 1);
         this.persons = this.persons.concat();
@@ -150,7 +123,7 @@ var AppComponent = (function () {
         this.orderByValue = '';
         this.gotoPage(1);
         this.persons = [this.model].concat(this.persons);
-        this.model = new Person(null, null, "", null);
+        this.model = new person_1.Person(null, null, "", null);
         this.pages = generatePaginationPages(this.persons);
     };
     ;
@@ -219,9 +192,10 @@ var AppComponent = (function () {
         core_1.Component({
             selector: 'my-app',
             pipes: [OrderByAndSlicePipe],
-            templateUrl: 'app/app.component.html'
+            templateUrl: 'app/app.component.html',
+            providers: [person_service_1.PersonService]
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [person_service_1.PersonService])
     ], AppComponent);
     return AppComponent;
 }());

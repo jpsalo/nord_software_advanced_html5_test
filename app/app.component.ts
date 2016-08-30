@@ -1,36 +1,10 @@
 import { Component, Pipe, PipeTransform } from '@angular/core';
 
+import { Person } from './person';
+import { PersonService } from './person.service';
+
 import * as chance from 'chance';
 var randomGenerator = new chance();
-
-export class Person {
-  constructor(
-    public id: string,
-    public name: string,
-    public gender: string,
-    public age: number
-  ) { }
-}
-
-const GENDERS: string[] = ['Male', 'Female', 'Other'];
-
-function generatePerson(): Person {
-  let gender = GENDERS[randomGenerator.integer({min: 0, max: GENDERS.length - 1})];
-  // let gender = randomGenerator.gender(); NOTE: This is not working.
-  let name: string;
-  if (gender !== 'Other') {
-    name = randomGenerator.first({ gender: gender }) + ' ' + randomGenerator.last();
-  } else {
-    name = randomGenerator.name();
-  }
-  let person = {
-    id: generateId(),
-    name: name,
-    gender: gender,
-    age: randomGenerator.age()
-  };
-  return new Person(person.id, person.name, person.gender, person.age);
-}
 
 function generateId(): string {
   return randomGenerator.string({length: 10, alpha: true});
@@ -45,16 +19,10 @@ function generatePaginationPages(dataArray): number[] {
   return paginationPages;
 }
 
-const NUMBER_OF_INITIAL_PERSONS: number = 100;
 const VISIBLE_PAGINATION_LINKS: number = 4;
 const VISIBLE_ITEMS_IN_PAGE: number = 20;
 const MIN_AGE: number = 1;
 const MAX_AGE: number = 120;
-
-const PERSONS: Person[] = [];
-for (let i = 0; i <= NUMBER_OF_INITIAL_PERSONS; i++) {
-  PERSONS.push(generatePerson());
-}
 
 function generateAges(): number[] {
   let ages = [];
@@ -108,16 +76,29 @@ export class OrderByAndSlicePipe implements PipeTransform {
 @Component({
   selector: 'my-app',
   pipes: [OrderByAndSlicePipe], // http://stackoverflow.com/a/39007605
-  templateUrl: 'app/app.component.html'
+  templateUrl: 'app/app.component.html',
+  providers: [PersonService]
 })
 
 export class AppComponent {
-  persons = PERSONS;
   model = new Person("", "", "", null);
+  persons: Person[];
   ages = AGES;
   selectedPerson: Person;
   personFieldInEdit: boolean;
   personToDelete: Person;
+
+  constructor(private personService: PersonService) { }
+
+  getPersons(): void {
+    this.persons = this.personService.getPersons();
+  }
+
+  ngOnInit(): void {
+    this.getPersons();
+    this.pages = generatePaginationPages(this.persons);
+  }
+
   doDeletePerson(): void {
     this.persons.splice(this.persons.indexOf(this.personToDelete), 1);
     this.persons = this.persons.concat();
@@ -156,7 +137,7 @@ export class AppComponent {
     this.orderByAscending = !this.orderByAscending;
   };
   // http://stackoverflow.com/a/34409303
-  pages = generatePaginationPages(this.persons);
+  pages: number[];
   currentPage = 1;
   gotoPage(pageNumber: number): void {
     this.currentPage = pageNumber;
