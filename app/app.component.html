@@ -1,0 +1,208 @@
+<nav class="navbar navbar-default navbar-static-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">
+        <img alt="Brand" src="../logo-new.svg">
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="container main">
+
+  <div class="section__add-person row">
+    <h1>Add a person</h1>
+    <form class="form-inline" (ngSubmit)="addNewPerson()"
+          #newPersonForm="ngForm">
+      <div class="form-group col-sm-5">
+        <label class="sr-only" for="personName">Name</label>
+        <input type="text" name="name" id="personName"
+               class="form-control full-width input-lg"
+               #newPerson placeholder="Name" required [(ngModel)]="model.name">
+      </div>
+      <div class="form-group col-sm-3">
+        <label class="sr-only" for="personGender">Gender</label>
+        <select id="personGender" name="gender"
+                class="form-control full-width input-lg" required
+                [(ngModel)]="model.gender">
+          <option value="" disabled selected>Gender</option>
+          <option value="Female">Female</option>
+          <option value="Male">Male</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group col-sm-3 no-gutter__right">
+        <label class="sr-only" for="personAge">Age</label>
+        <select id="personAge" name="age"
+                class="form-control full-width input-lg" required
+                [(ngModel)]="model.age">
+          <option value=null disabled selected>Age</option>
+          <option *ngFor="let age of ages" [value]="age">{{age}}</option>
+        </select>
+      </div>
+      <div class="col-sm-1
+              pull-right">
+        <button type="submit" class="btn btn-default pull-right btn-lg"
+                (click)="addNewPerson(newPerson.value)"
+                [disabled]="!newPersonForm.form.valid" aria-label="Left Align">
+          <span class="glyphicon glyphicon-plus icon-add" aria-hidden="true"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="row section__persons-list">
+
+    <table class="table table-striped" btn-lg>
+
+      <thead>
+        <tr class="row">
+          <th>
+            <span class="heading-text left-edge-cell__text">Name</span>
+            <button type="button" class="btn btn-link" aria-label="Left Align"
+                     (click)="sortBy('name')">
+              <span class="glyphicon glyphicon-signal icon-sort"
+                    [class.active]="orderByValue === 'name'"
+                    [class.ascending]="orderByValue === 'name' && orderByAscending"
+                    aria-hidden="true"></span>
+            </button>
+          </th>
+          <th>
+            <span class="heading-text">Gender</span>
+            <button type="button" class="btn btn-link" aria-label="Left Align"
+                     (click)="sortBy('gender')">
+              <span class="glyphicon glyphicon-signal icon-sort"
+                    [class.active]="orderByValue === 'gender'"
+                    [class.ascending]="orderByValue === 'gender' && orderByAscending"
+                    aria-hidden="true"></span>
+            </button>
+          </th>
+          <th>
+            <span class="heading-text">Age</span>
+            <button type="button" class="btn btn-link" aria-label="Left Align"
+                     (click)="sortBy('age')">
+              <span class="glyphicon glyphicon-signal icon-sort"
+                    [class.active]="orderByValue === 'age'"
+                    [class.ascending]="orderByValue === 'age' && orderByAscending"
+                    aria-hidden="true"></span>
+            </button>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let person of
+            (persons | orderByAndSlice:orderByValue:orderByAscending:currentPage);trackBy:person?.id"
+            class="row person-row"
+            [class.inactive]="selectedPerson && person !== selectedPerson">
+
+          <td class="col-md-5">
+            <span>
+              <label class="sr-only" for="selectedPersonName">Name</label>
+              <input type="text" class="form-control input-lg cell__input"
+                     [class.active]="person === selectedPerson"
+                     id="selectedPersonName"
+                     (keyup)="onKey($event, person)"
+                     [(ngModel)]="person.name" placeholder="Name">
+            </span>
+          </td>
+
+          <td class="col-md-3">
+            <div class="cell__editable">
+              <label class="sr-only" for="selectedPersonGender">Gender</label>
+              <select id="selectedPersonGender" name="gender"
+                      class="form-control input-lg"
+                      [class.active]="person === selectedPerson"
+                      required [(ngModel)]="person.gender">
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </td>
+
+          <td class="col-md-2">
+            <div class="cell__editable">
+              <label class="sr-only" for="selectedPersonAge">Age</label>
+              <select id="selectedPersonAge" name="age"
+                      class="form-control input-lg"
+                      [class.active]="person === selectedPerson"
+                      required [(ngModel)]="person.age">
+                <option *ngFor="let age of ages" [value]="age">{{age}}</option>
+              </select>
+            </div>
+          </td>
+
+          <td class="col-md-2">
+            <div class="pull-right">
+              <button type="button" class="btn btn-link" aria-label="Left Align"
+                      (click)="toggleEditPersonDetails(person)">
+                <span class="glyphicon glyphicon-pencil icon-edit"
+                      [class.active]="person === selectedPerson"
+                      aria-hidden="true">
+                </span>
+              </button>
+              <div class="divider"></div>
+              <button type="button" class="btn btn-link"
+                      aria-label="Left Align"
+                      (click)="deletePerson(person)">
+                <span class="glyphicon glyphicon-remove icon-remove"
+                      aria-hidden="true">
+                </span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <nav class="text-center" aria-label="Page navigation">
+    <ul class="pagination pagination-lg">
+      <li [class.invisible]="!isPaginationArrowVisible('previous')">
+        <a aria-label="Previous" (click)="gotoPreviousPage()">
+          <span aria-hidden="true">&hellip;</span>
+        </a>
+      </li>
+      <li *ngFor="let pageNumber of pages"
+          [class.active]="pageNumber === currentPage">
+        <a (click)="gotoPage(pageNumber)">{{ pageNumber }}</a>
+      </li>
+      <li [class.invisible]="!isPaginationArrowVisible('next')">
+        <a aria-label="Next" (click)="gotoNextPage()">
+          <span aria-hidden="true">&hellip;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- The Modal -->
+  <div [class.visible]="modalVisible" class="my-modal">
+    <!-- Modal content -->
+    <div class="my-modal-content text-center">
+      <div class="my-modal-header">
+        <h2>Remove person</h2>
+      </div>
+      <div class="my-modal-body">
+        <p>Are you sure you want to remove this entry?</p>
+      </div>
+      <div class="my-modal-footer">
+        <div style="max-width: 400px; margin: auto;">
+          <span style="width: 50% max-width: 150px; display: inline-block;">
+            <button type="button" class="btn btn-default btn-block btn-lg button-reject" (click)="closeModal()">
+              CANCEL
+            </button>
+          </span>
+          <span style="width: 50%; max-width: 150px; display: inline-block;">
+            <button type="button" class="btn btn-default btn-block btn-lg button-confirm" (click)="closeModal(true)">
+              YES
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
