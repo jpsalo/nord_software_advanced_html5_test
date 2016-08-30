@@ -10,11 +10,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var mock_persons_1 = require('./mock-persons');
+var chance = require('chance');
+var randomGenerator = new chance();
+function generateId() {
+    return randomGenerator.string({ length: 10, alpha: true });
+}
 var PersonService = (function () {
     function PersonService() {
     }
     PersonService.prototype.getPersons = function () {
         return mock_persons_1.PERSONS;
+    };
+    PersonService.prototype.addNewPerson = function (personData) {
+        personData.id = generateId();
+        mock_persons_1.PERSONS.unshift(personData);
     };
     PersonService = __decorate([
         core_1.Injectable(), 

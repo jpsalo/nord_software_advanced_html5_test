@@ -115,13 +115,10 @@ export class AppComponent {
     this.selectedPerson = undefined;
   };
   addNewPerson(): void {
-    this.model.id = generateId();
-    // http://stackoverflow.com/a/34497504
-    // this.persons.unshift(this.model);
+    this.personService.addNewPerson(this.model);
     // By using the 'natural' order, we get new person to appear on top of the list.
     this.orderByValue = '';
     this.gotoPage(1);
-    this.persons = [this.model].concat(this.persons);
     this.model = new Person(null, null, "", null);
     this.pages = generatePaginationPages(this.persons);
   };
