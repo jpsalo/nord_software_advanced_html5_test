@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 // http://stackoverflow.com/a/39007605
 var orderby_slice_pipe_1 = require('./orderby-slice.pipe');
-var person_1 = require('./person');
 var person_service_1 = require('./person.service');
 var modalConfirmCallback;
 function registerModalConfirmCallback(data) {
@@ -49,7 +48,7 @@ var AGES = generateAges();
 var AppComponent = (function () {
     function AppComponent(personService) {
         this.personService = personService;
-        this.newPerson = new person_1.Person("", "", "", null);
+        this.newPerson = this.personService.initializeNewPerson();
         this.ages = AGES;
         this.visibleItemsInPage = VISIBLE_ITEMS_IN_PAGE;
         this.currentPage = 1;
@@ -76,9 +75,9 @@ var AppComponent = (function () {
     AppComponent.prototype.addNewPerson = function () {
         this.persons = this.personService.addNewPerson(this.newPerson, this.persons);
         // By using the 'natural' order, we get new person to appear on top of the list.
+        this.newPerson = this.personService.initializeNewPerson();
         this.orderByValue = '';
         this.gotoPage(1);
-        this.newPerson = new person_1.Person(null, null, "", null);
         this.pages = generatePaginationPages(this.persons);
     };
     AppComponent.prototype.deletePerson = function (person) {

@@ -16,6 +16,10 @@ export class PersonService {
     return PERSONS;
   }
 
+  initializeNewPerson(): Person {
+    return new Person("", "", "", null);
+  }
+
   addNewPerson(personData: any, persons: Person[]): Person[] {
     personData.id = generateId();
     persons.unshift(personData);

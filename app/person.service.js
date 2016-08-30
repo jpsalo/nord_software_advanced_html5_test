@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var person_1 = require('./person');
 var mock_persons_1 = require('./mock-persons');
 var chance = require('chance');
 var randomGenerator = new chance();
@@ -20,6 +21,9 @@ var PersonService = (function () {
     }
     PersonService.prototype.getPersons = function () {
         return mock_persons_1.PERSONS;
+    };
+    PersonService.prototype.initializeNewPerson = function () {
+        return new person_1.Person("", "", "", null);
     };
     PersonService.prototype.addNewPerson = function (personData, persons) {
         personData.id = generateId();
