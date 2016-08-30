@@ -288,12 +288,21 @@ h1 {
   padding-bottom: 75px;
 }
 
+.my-modal-footer__container {
+  max-width: 400px;
+  margin: auto;
+}
 /* Add space between button containers */
 .my-modal-footer span:first-child {
   margin-right: 7px;
 }
 .my-modal-footer span:last-child {
   margin-left: 7px;
+}
+.my-modal-footer .wrapper__wide-button {
+  width: 50%;
+  max-width: 150px;
+  display: inline-block;
 }
 
 /* Modal Content */
